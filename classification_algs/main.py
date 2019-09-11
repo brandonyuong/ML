@@ -70,9 +70,18 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
 def main():
     x, y, x_train, x_test, y_train, y_test = load_data('csv_result-PhishingData.csv',
                                                        test_size=0.80, random_state=0)
-    #DecisionTreeAnalysis(x_train, x_test, y_train, y_test)
 
-    plot_learning_curve(DecisionTreeClassifier(), "Decision Tree Learning Curve", x, y)
+    """
+    DecisionTreeAnalysis(x_train, x_test, y_train, y_test)
+    plot_learning_curve(DecisionTreeClassifier(), "Phishing Data DT", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=9),
+                        "Phishing Data DT: Max Depth 9", x, y)
+    
+    """
+    plot_learning_curve(DecisionTreeClassifier(max_features='sqrt'),
+                        "Phishing Data DT: (sqrt n) Max Features", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_features='log2'),
+                        "Phishing Data DT: (log2 n) Max Features", x, y)
 
 
 if __name__ == '__main__':
