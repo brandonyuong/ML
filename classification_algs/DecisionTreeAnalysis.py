@@ -1,8 +1,3 @@
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sn
-import sklearn.model_selection as ms
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
 
@@ -22,3 +17,4 @@ class DecisionTreeAnalysis(object):
         print("Decision Tree Analysis:\n")
         print(report)
         print("Test Set Accuracy: " + str(report_dict['accuracy']))
+        print("Tree depth: " + str(dtree.get_depth()))
