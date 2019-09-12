@@ -2,31 +2,30 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sn
+
 import sklearn.model_selection as ms
-
-from sklearn.datasets import load_digits
 from sklearn.model_selection import learning_curve
-from sklearn.model_selection import ShuffleSplit
+
 from sklearn.tree import DecisionTreeClassifier
+from classification_algs.DT_Analysis import DT_Analysis
+from classification_algs.KNN_Analysis import KNN_Analysis
 
-from classification_algs.DecisionTreeAnalysis import DecisionTreeAnalysis
 
+def load_split_data(csv_file, **kwargs):
+    """
+    Load data from CSV file.  The results vector must be in the last column!
 
-def load_data(csv_file, **kwargs):
-
+    :param csv_file: String name of csv file
+    :param kwargs: Optional arguments for train_test_split()
+    :return: Data frames to be input into learning algorithms
+    """
     df = pd.read_csv(csv_file)
-    x = attr_from_csv(csv_file)  # attribute columns
-    y = df.iloc[:, -1]  # results column
+    col_index = list(df.columns.values)
+    result_label = col_index[-1]  # get label of the last column
+    x = df.drop(columns=result_label, axis=1)
+    y = df.iloc[:, -1]
     x_train, x_test, y_train, y_test = ms.train_test_split(x, y, **kwargs)
     return x, y, x_train, x_test, y_train, y_test
-
-
-def attr_from_csv(path):
-    df = pd.read_csv(path, nrows=1)  # read just first line for columns
-    columns = df.columns.tolist()  # get the columns
-    cols_to_use = columns[:len(columns) - 1]  # drop the last one
-    df = pd.read_csv(path, usecols=cols_to_use)
-    return df
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
@@ -61,27 +60,35 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
              label="Cross-validation score")
 
     plt.legend(loc="best")
-
     plt.savefig(title + ".png")
 
     return plt
 
 
 def main():
-    x, y, x_train, x_test, y_train, y_test = load_data('csv_result-PhishingData.csv',
-                                                       test_size=0.80, random_state=0)
+    x, y, x_train, x_test, y_train, y_test = load_split_data('PhishingData.csv',
+                                                             test_size=0.80,
+                                                             random_state=0)
 
     """
-    DecisionTreeAnalysis(x_train, x_test, y_train, y_test)
+    *** History ***
+    
+    DT_Analysis(x_train, x_test, y_train, y_test)
     plot_learning_curve(DecisionTreeClassifier(), "Phishing Data DT", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=3),
+                        "Phishing Data DT: Max Depth 3", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=6),
+                        "Phishing Data DT: Max Depth 6", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_depth=9),
                         "Phishing Data DT: Max Depth 9", x, y)
-    
-    """
     plot_learning_curve(DecisionTreeClassifier(max_features='sqrt'),
                         "Phishing Data DT: (sqrt n) Max Features", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_features='log2'),
                         "Phishing Data DT: (log2 n) Max Features", x, y)
+    
+    KNN_Analysis(x_train, x_test, y_train, y_test)
+    
+    """
 
 
 if __name__ == '__main__':

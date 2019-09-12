@@ -2,7 +2,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
 
 
-class DecisionTreeAnalysis(object):
+class DT_Analysis(object):
     """
     This class is for printing a decision tree classification analysis of a data set.
     """
