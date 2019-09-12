@@ -1,18 +1,21 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sn
 
 import sklearn.model_selection as ms
 from sklearn.model_selection import learning_curve
 
-from sklearn.tree import DecisionTreeClassifier
-from classification_algs.DT_Analysis import DT_Analysis
-from sklearn.neighbors import KNeighborsClassifier
-from classification_algs.KNN_Analysis import KNN_Analysis
 from classification_algs.helpers import scale_features
+from sklearn.tree import DecisionTreeClassifier
+from classification_algs.DTAnalysis import DTAnalysis
+from sklearn.neighbors import KNeighborsClassifier
+from classification_algs.KNNAnalysis import KNNAnalysis
 from sklearn.neural_network import MLPClassifier
-from classification_algs.MLP_Analysis import MLP_Analysis
+from classification_algs.MLPAnalysis import MLPAnalysis
+from sklearn.linear_model import SGDClassifier
+from classification_algs.SVMAnalysis import SVMAnalysis
+from sklearn.ensemble import AdaBoostClassifier
+from classification_algs.BoostAnalysis import BoostAnalysis
 
 
 def load_split_data(csv_file, **kwargs):
@@ -77,7 +80,7 @@ def main():
     """
     *** History ***
     
-    DT_Analysis(x_train, x_test, y_train, y_test)
+    DTAnalysis(x_train, x_test, y_train, y_test)
     plot_learning_curve(DecisionTreeClassifier(), "Phishing Data DT", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_depth=3),
                         "Phishing Data DT: Max Depth 3", x, y)
@@ -96,7 +99,7 @@ def main():
     plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=8),
                         "Phishing Data DT: Max Leaf Nodes = 8", x, y)
     
-    KNN_Analysis(x_train, x_test, y_train, y_test)
+    KNNAnalysis(x_train, x_test, y_train, y_test)
     scaled_x = scale_features(x)
     plot_learning_curve(KNeighborsClassifier(n_neighbors=2),
                         "Phishing Data KNN: k = 2", scaled_x, y)
@@ -111,12 +114,17 @@ def main():
     plot_learning_curve(KNeighborsClassifier(weights='distance', p=1),
                         "Phishing Data KNN: weights='distance', p=1", scaled_x, y)
     
-    MLP_Analysis(x_train, x_test, y_train, y_test)
+    MLPAnalysis(x_train, x_test, y_train, y_test)
     plot_learning_curve(MLPClassifier(), "Phishing Data NN", x, y)
     
+    SVMAnalysis(x_train, x_test, y_train, y_test)
+    
+    BoostAnalysis(x_train, x_test, y_train, y_test)
     
     """
-    
+    plot_learning_curve(SGDClassifier(), "Phishing Data SVM", x, y)
+    plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting", x, y)
+
 
 if __name__ == '__main__':
     main()
