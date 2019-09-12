@@ -8,7 +8,9 @@ from sklearn.model_selection import learning_curve
 
 from sklearn.tree import DecisionTreeClassifier
 from classification_algs.DT_Analysis import DT_Analysis
+from sklearn.neighbors import KNeighborsClassifier
 from classification_algs.KNN_Analysis import KNN_Analysis
+from classification_algs.helpers import scale_features
 
 
 def load_split_data(csv_file, **kwargs):
@@ -85,10 +87,31 @@ def main():
                         "Phishing Data DT: (sqrt n) Max Features", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_features='log2'),
                         "Phishing Data DT: (log2 n) Max Features", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=2),
+                        "Phishing Data DT: Max Leaf Nodes = 2", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=5),
+                        "Phishing Data DT: Max Leaf Nodes = 5", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=8),
+                        "Phishing Data DT: Max Leaf Nodes = 8", x, y)
     
     KNN_Analysis(x_train, x_test, y_train, y_test)
+    scaled_x = scale_features(x)
+    plot_learning_curve(KNeighborsClassifier(n_neighbors=2),
+                        "Phishing Data KNN: k = 2", scaled_x, y)
+    plot_learning_curve(KNeighborsClassifier(n_neighbors=5),
+                        "Phishing Data KNN: k = 5", scaled_x, y)
+    plot_learning_curve(KNeighborsClassifier(n_neighbors=8),
+                        "Phishing Data KNN: k = 8", scaled_x, y)
+    plot_learning_curve(KNeighborsClassifier(weights='distance'),
+                        "Phishing Data KNN: weights='distance'", scaled_x, y)
+    plot_learning_curve(KNeighborsClassifier(p=1),
+                        "Phishing Data KNN: p=1 Manhattan Distance", scaled_x, y)
+    plot_learning_curve(KNeighborsClassifier(weights='distance', p=1),
+                        "Phishing Data KNN: weights='distance', p=1", scaled_x, y)
     
     """
+    scaled_x = scale_features(x)
+
 
 
 if __name__ == '__main__':
