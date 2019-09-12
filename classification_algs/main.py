@@ -11,6 +11,8 @@ from classification_algs.DT_Analysis import DT_Analysis
 from sklearn.neighbors import KNeighborsClassifier
 from classification_algs.KNN_Analysis import KNN_Analysis
 from classification_algs.helpers import scale_features
+from sklearn.neural_network import MLPClassifier
+from classification_algs.MLP_Analysis import MLP_Analysis
 
 
 def load_split_data(csv_file, **kwargs):
@@ -109,10 +111,12 @@ def main():
     plot_learning_curve(KNeighborsClassifier(weights='distance', p=1),
                         "Phishing Data KNN: weights='distance', p=1", scaled_x, y)
     
+    MLP_Analysis(x_train, x_test, y_train, y_test)
+    plot_learning_curve(MLPClassifier(), "Phishing Data NN", x, y)
+    
+    
     """
-    scaled_x = scale_features(x)
-
-
+    
 
 if __name__ == '__main__':
     main()

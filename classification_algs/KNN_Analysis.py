@@ -5,7 +5,7 @@ from classification_algs.helpers import scale_features
 
 class KNN_Analysis(object):
     """
-    This class is for printing a decision tree classification analysis of a data set.
+    This class is for printing a KNN classification analysis of a data set.
     """
 
     def __init__(self, x_train, x_test, y_train, y_test, **kwargs):
