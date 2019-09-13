@@ -76,6 +76,7 @@ def main():
     x, y, x_train, x_test, y_train, y_test = load_split_data('PhishingData.csv',
                                                              test_size=0.80,
                                                              random_state=0)
+    scaled_x = scale_features(x)
 
     """
     *** History ***
@@ -100,7 +101,6 @@ def main():
                         "Phishing Data DT: Max Leaf Nodes = 8", x, y)
     
     KNNAnalysis(x_train, x_test, y_train, y_test)
-    scaled_x = scale_features(x)
     plot_learning_curve(KNeighborsClassifier(n_neighbors=2),
                         "Phishing Data KNN: k = 2", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(n_neighbors=5),
@@ -115,15 +115,24 @@ def main():
                         "Phishing Data KNN: weights='distance', p=1", scaled_x, y)
     
     MLPAnalysis(x_train, x_test, y_train, y_test)
-    plot_learning_curve(MLPClassifier(), "Phishing Data NN", x, y)
+    plot_learning_curve(MLPClassifier(), "Phishing Data NN (unscaled)", x, y)
+    plot_learning_curve(MLPClassifier(), "Phishing Data NN", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='identity'),
+                        "Phishing Data NN: activation='identity'", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='logistic'),
+                        "Phishing Data NN: activation='logistic'", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='tanh'),
+                        "Phishing Data NN: activation='tanh'", scaled_x, y)
     
     SVMAnalysis(x_train, x_test, y_train, y_test)
+    plot_learning_curve(SGDClassifier(), "Phishing Data SVM (unscaled)", x, y)
+    plot_learning_curve(SGDClassifier(), "Phishing Data SVM", scaled_x, y)
     
     BoostAnalysis(x_train, x_test, y_train, y_test)
+    plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting (unscaled)", x, y)
+    plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting", scaled_x, y)
     
     """
-    plot_learning_curve(SGDClassifier(), "Phishing Data SVM", x, y)
-    plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting", x, y)
 
 
 if __name__ == '__main__':
