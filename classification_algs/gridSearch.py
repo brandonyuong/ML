@@ -7,15 +7,14 @@ mlp_param_grid = [
         'activation': ['identity', 'logistic', 'tanh', 'relu'],
         'solver': ['lbfgs', 'sgd', 'adam'],
         'hidden_layer_sizes': [
-            (1,), (2,), (3,), (4,), (5,), (6,), (7,), (8,), (9,), (10,), (11,), (12,),
-            (13,), (14,), (15,), (16,), (17,), (18,), (19,), (20,), (21,)
+            (7,), (8,), (9,), (10,), (11,), (12,), (13,), (14,), (15,), (16,)
         ]
     }
 ]
 
 
 def grid_search_mlp(x, y):
-    clf = GridSearchCV(MLPClassifier(max_iter=1000), mlp_param_grid, cv=5, scoring='accuracy')
+    clf = GridSearchCV(MLPClassifier(), mlp_param_grid, cv=5, scoring='accuracy')
     clf.fit(x, y)
     print("Best parameters set found for MLPClassifier():")
     print(clf.best_params_)

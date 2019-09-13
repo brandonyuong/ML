@@ -1,4 +1,7 @@
+import sklearn.model_selection as ms
+
 from classification_algs.helpers import *
+
 from sklearn.tree import DecisionTreeClassifier
 from classification_algs.DTAnalysis import DTAnalysis
 from sklearn.neighbors import KNeighborsClassifier
@@ -12,10 +15,9 @@ from classification_algs.BoostAnalysis import BoostAnalysis
 
 
 def main():
-    x_train, x_test, y_train, y_test = load_split_data('PhishingData.csv',
-                                                       test_size=0.80,
-                                                       random_state=0)
     x, y = load_data('PhishingData.csv')
+    x_train, x_test, y_train, y_test = ms.train_test_split(x, y, test_size=0.80,
+                                                           random_state=0)
     scaled_x = scale_features(x)
 
     """
