@@ -57,15 +57,28 @@ def main():
                         "Phishing Data KNN: weights='distance', p=1", scaled_x, y)
     
     MLPAnalysis(x_train, x_test, y_train, y_test)
-    plot_learning_curve(MLPClassifier(), "Phishing Data NN (unscaled)", x, y)
-    plot_learning_curve(MLPClassifier(), "Phishing Data NN", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='identity'),
-                        "Phishing Data NN: activation='identity'", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='logistic'),
-                        "Phishing Data NN: activation='logistic'", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='tanh'),
-                        "Phishing Data NN: activation='tanh'", scaled_x, y)
-    
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10),
+                        "Phishing Data NN (unscaled)", x, y)
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10),
+                        "Phishing Data NN", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+                                      solver='lbfgs'),
+                        "Phishing Data NN: solver='lbfgs'", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+                                      solver='sgd'),
+                        "Phishing Data NN: solver='sgd'", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+                                      solver='adam'),
+                        "Phishing Data NN: solver='adam'", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+                                      learning_rate='constant'),
+                        "Phishing Data NN: learning_rate='constant'", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+                                      learning_rate='invscaling'),
+                        "Phishing Data NN: learning_rate='invscaling'", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+                                      learning_rate='adaptive'),
+                        "Phishing Data NN: learning_rate='adaptive'", scaled_x, y)
     
     SVMAnalysis(x_train, x_test, y_train, y_test)
     plot_learning_curve(SGDClassifier(), "Phishing Data SVM (unscaled)", x, y)
@@ -75,12 +88,19 @@ def main():
     plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting (unscaled)", x, y)
     plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting", scaled_x, y)
     """
+
+    """
+    TEST
+    
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
                                       solver='lbfgs'),
                         "Phishing Data NN: Test'", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='logistic', hidden_layer_sizes=12,
                                       solver='lbfgs'),
                         "Phishing Data NN: Test 2'", scaled_x, y)
+    """
+
+
 
 
 if __name__ == '__main__':
