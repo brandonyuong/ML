@@ -120,6 +120,28 @@ def main():
     SVCAnalysis(x_train, x_test, y_train, y_test)
     plot_learning_curve(SVC(), "Phishing Data: SVC (unscaled)", x, y)
     plot_learning_curve(SVC(), "Phishing Data: SVC", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly'), 
+                        "Phishing Data: SVC kernel='poly'", scaled_x, y)
+    plot_learning_curve(SVC(kernel='rbf'),
+                        "Phishing Data: SVC kernel='rbf'", scaled_x, y)
+    plot_learning_curve(SVC(gamma='auto'),
+                        "Phishing Data: SVC gamma='auto'", scaled_x, y)
+    plot_learning_curve(SVC(gamma='scale'),
+                        "Phishing Data: SVC gamma='scale'", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly', degree=2),
+                        "Phishing Data: SVC kernel='poly', deg 2", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly', degree=3),
+                        "Phishing Data: SVC kernel='poly', deg 3", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly', degree=4),
+                        "Phishing Data: SVC kernel='poly', deg 4", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly', coef0=0.0),
+                        "Phishing Data: SVC kernel='poly', coef0=0.0", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly', coef0=1.0),
+                        "Phishing Data: SVC kernel='poly', coef0=1.0", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly', coef0=2.0),
+                        "Phishing Data: SVC kernel='poly', coef0=2.0", scaled_x, y)
+    plot_learning_curve(SVC(kernel='poly', coef0=3.0),
+                        "Phishing Data: SVC kernel='poly', coef0=3.0", scaled_x, y)
     
     """
 
@@ -138,8 +160,13 @@ def main():
                                            learning_rate=1., n_estimators=300),
                         "Phishing Data: Boosting TEST", scaled_x, y)
     
-    """
+    plot_learning_curve(SVC(kernel='poly', gamma='auto', coef0=0.0, degree=3),
+                        "Phishing Data: SVC TEST 1", scaled_x, y)
+    plot_learning_curve(SVC(kernel='rbf', gamma='auto', coef0=0.0),
+                        "Phishing Data: SVC TEST 2", scaled_x, y)
     
+    """
+
 
 if __name__ == '__main__':
     main()

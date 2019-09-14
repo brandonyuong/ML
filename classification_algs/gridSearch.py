@@ -6,6 +6,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.linear_model import SGDClassifier
 from sklearn.ensemble import AdaBoostClassifier
+from sklearn.svm import SVC
 
 mlp_param_grid = [
     {
@@ -35,6 +36,22 @@ sgdc_param_grid = [
         'learning_rate': ['constant', 'optimal', 'invscaling', 'adaptive']
     }
 ]
+
+svc_param_grid = [
+    {
+        'kernel': ['linear', 'poly', 'rbf', 'sigmoid'],
+        'degree': [2, 3, 4, 5],
+        'gamma': ['auto', 'scale'],
+        'coef0': [0.0, .5, .75, 1., 1.25, 2., 2.5, 3., 3.5]
+    }
+]
+
+
+def grid_search_svc(x, y):
+    clf = GridSearchCV(SVC(), svc_param_grid, cv=5, scoring='accuracy')
+    clf.fit(x, y)
+    print("Best parameters set found for SVClassifier():")
+    print(clf.best_params_)
 
 
 def grid_search_sgdc(x, y):
@@ -67,6 +84,7 @@ def main():
     # grid_search_mlp(scaled_x, y)
     # grid_search_boost(scaled_x, y)
     # grid_search_sgdc(scaled_x, y)
+    grid_search_svc(scaled_x, y)
 
 
 if __name__ == '__main__':
