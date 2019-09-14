@@ -8,8 +8,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from classification_algs.KNNAnalysis import KNNAnalysis
 from sklearn.neural_network import MLPClassifier
 from classification_algs.MLPAnalysis import MLPAnalysis
-from sklearn.linear_model import SGDClassifier
-from classification_algs.SVMAnalysis import SVMAnalysis
+from sklearn.svm import SVC
+from classification_algs.SVCAnalysis import SVCAnalysis
 from sklearn.ensemble import AdaBoostClassifier
 from classification_algs.BoostAnalysis import BoostAnalysis
 
@@ -80,13 +80,47 @@ def main():
                                       learning_rate='adaptive'),
                         "Phishing Data NN: learning_rate='adaptive'", scaled_x, y)
     
-    SVMAnalysis(x_train, x_test, y_train, y_test)
-    plot_learning_curve(SGDClassifier(), "Phishing Data SVM (unscaled)", x, y)
-    plot_learning_curve(SGDClassifier(), "Phishing Data SVM", scaled_x, y)
-    
     BoostAnalysis(x_train, x_test, y_train, y_test)
     plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting (unscaled)", x, y)
     plot_learning_curve(AdaBoostClassifier(), "Phishing Data Boosting", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=2)),
+                        "Phishing Data: Boosting DT Depth 2", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5)),
+                        "Phishing Data: Boosting DT Depth 5", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=8)),
+                        "Phishing Data: Boosting DT Depth 8", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5),
+                                           learning_rate=.25),
+                        "Phishing Data: Boosting, learning_rate=0.25", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5),
+                                           learning_rate=1.),
+                        "Phishing Data: Boosting, learning_rate=1.0", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5),
+                                           learning_rate=2.),
+                        "Phishing Data: Boosting, learning_rate=2.0", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5),
+                                           n_estimators=25),
+                        "Phishing Data: Boosting, n_estimators=25", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5),
+                                           n_estimators=150),
+                        "Phishing Data: Boosting, n_estimators=150", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5),
+                                           n_estimators=300),
+                        "Phishing Data: Boosting, n_estimators=300", scaled_x, y)
+    
+    SVCAnalysis(x_train, x_test, y_train, y_test)
+    plot_learning_curve(SVC(), "Phishing Data: SVC (unscaled)", x, y)
+    plot_learning_curve(SVC(), "Phishing Data: SVC", scaled_x, y)
+    
     """
 
     """
@@ -98,10 +132,14 @@ def main():
     plot_learning_curve(MLPClassifier(activation='logistic', hidden_layer_sizes=12,
                                       solver='lbfgs'),
                         "Phishing Data NN: Test 2'", scaled_x, y)
+                        
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=5),
+                                           learning_rate=1., n_estimators=300),
+                        "Phishing Data: Boosting TEST", scaled_x, y)
+    
     """
-
-
-
+    
 
 if __name__ == '__main__':
     main()

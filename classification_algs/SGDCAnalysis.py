@@ -3,7 +3,7 @@ from sklearn.metrics import classification_report
 from classification_algs.helpers import scale_features
 
 
-class SVMAnalysis(object):
+class SGDCAnalysis(object):
     """
     This class is for printing a SVM analysis of a data set.
     """

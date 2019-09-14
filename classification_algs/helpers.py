@@ -45,7 +45,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5,
 
     plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
                      train_scores_mean + train_scores_std, alpha=0.1,
-                     color="r")
+                     color="#f92672")
     plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
                      test_scores_mean + test_scores_std, alpha=0.1, color="#007fff")
     plt.plot(train_sizes, train_scores_mean, 'o-', color="#f92672",
