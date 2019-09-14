@@ -6,24 +6,30 @@ from sklearn.model_selection import learning_curve
 from sklearn.preprocessing import StandardScaler
 
 
-def load_data(csv_file):
+def load_data(csv_file, dep_vars):
     """
     Load data from CSV file.  The results vector must be in the last column!
 
-    :param csv_file: String name of csv file
-    :param kwargs: Optional arguments for train_test_split()
+    :param csv_file: (str) name of csv file
+    :param dep_vars: (int) number of dependent variables at end of file
     :return: Data frames to be input into learning algorithms
     """
-    df = pd.read_csv(csv_file)
-    col_index = list(df.columns.values)
-    result_label = col_index[-1]  # get label of the last column
-    x = df.drop(columns=result_label, axis=1)
-    y = df.iloc[:, -1]
+    x = pd.read_csv(csv_file)
+
+    df_copy = x.copy()
+    len_x = len(x.columns)
+    y = df_copy.iloc[:, len_x - dep_vars:len_x]
+
+    col_index = list(x.columns.values)
+    for n in range(1, dep_vars + 1):
+        dep_var_label = col_index[-1 * n]  # get label of the last column
+        x.drop(columns=dep_var_label, axis=1, inplace=True)
+
     return x, y
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5,
-                        n_jobs=None, train_sizes=np.linspace(.15, 0.95, 9)):
+                        n_jobs=None, train_sizes=np.linspace(.1, 1., 9)):
     """
     Function retrieved from:
     https://scikit-learn.org/stable/auto_examples/model_selection/plot_learning_curve.html
