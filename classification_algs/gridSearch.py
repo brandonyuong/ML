@@ -8,6 +8,22 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.svm import SVC
 
+dt_param_grid = [
+    {
+        'max_depth': [18, 19, 20, 21, 22],
+        'max_features': ['auto', 'sqrt', 'log2', None],
+        'max_leaf_nodes': [2, 3, 5, 7, 9]
+    }
+]
+
+knn_param_grid = [
+    {
+        'n_neighbors': [2, 4, 6, 8, 10],
+        'p': [1, 2],
+        'weights': ['uniform', 'distance']
+    }
+]
+
 mlp_param_grid = [
     {
         'activation': ['identity', 'logistic', 'tanh', 'relu'],
@@ -21,7 +37,7 @@ mlp_param_grid = [
 boost_param_grid = [
     {
         'n_estimators': [50, 100, 200, 300, 400],
-        'learning_rate': [.2, .5, .75, 1, 1.5, 2., 2.5]
+        'learning_rate': [1., 2., 2.5, 3., 3.5, 4.]
     }
 ]
 
@@ -40,9 +56,9 @@ sgdc_param_grid = [
 svc_param_grid = [
     {
         'kernel': ['linear', 'poly', 'rbf', 'sigmoid'],
-        'degree': [2, 3, 4, 5],
+        'degree': [3, 4, 5, 6, 7],
         'gamma': ['auto', 'scale'],
-        'coef0': [0.0, .5, .75, 1., 1.25, 2., 2.5, 3., 3.5]
+        'coef0': [-1., -.5, 0.0, .5, .75]
     }
 ]
 
@@ -61,9 +77,9 @@ def grid_search_sgdc(x, y):
     print(clf.best_params_)
 
 
-def grid_search_boost(x, y):
+def grid_search_boost(x, y, **kwargs):
     clf = GridSearchCV(AdaBoostClassifier(base_estimator=
-                                          DecisionTreeClassifier(max_depth=5)),
+                                          DecisionTreeClassifier(**kwargs)),
                        boost_param_grid, cv=5, scoring='accuracy')
     clf.fit(x, y)
     print("Best parameters set found for AdaBoostClassifier():")
@@ -77,14 +93,31 @@ def grid_search_mlp(x, y):
     print(clf.best_params_)
 
 
+def grid_search_knn(x, y):
+    clf = GridSearchCV(KNeighborsClassifier(), knn_param_grid, cv=5, scoring='accuracy')
+    clf.fit(x, y)
+    print("Best parameters set found for KNeighborsClassifier():")
+    print(clf.best_params_)
+
+
+def grid_search_dt(x, y):
+    clf = GridSearchCV(DecisionTreeClassifier(), dt_param_grid, cv=5, scoring='accuracy')
+    clf.fit(x, y)
+    print("Best parameters set found for DecisionTreeClassifier():")
+    print(clf.best_params_)
+
+
 def main():
-    x, y = load_data('PhishingData.csv')
+    x, y = load_data('SteelFaults.csv', 7)
     scaled_x = scale_features(x)
 
-    # grid_search_mlp(scaled_x, y)
-    # grid_search_boost(scaled_x, y)
-    # grid_search_sgdc(scaled_x, y)
+    #grid_search_dt(scaled_x, y)
+    # grid_search_knn(scaled_x, y)
+    #grid_search_mlp(scaled_x, y)
+    #grid_search_boost(scaled_x, y, max_depth=20)
     grid_search_svc(scaled_x, y)
+
+    # grid_search_sgdc(scaled_x, y)
 
 
 if __name__ == '__main__':

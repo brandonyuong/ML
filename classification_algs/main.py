@@ -17,19 +17,23 @@ from sklearn.feature_extraction import DictVectorizer
 
 def main():
 
-    #x, y = load_data('PhishingData.csv', 1)
-    x, y = load_data('SteelFaults.csv', 7)
-    x_train, x_test, y_train_unraveled, y_test_unraveled = \
-        ms.train_test_split(x, y, test_size=0.80, random_state=0)
-    scaled_x = scale_features(x)
-    y_train = np.ravel(y_train_unraveled)
-    y_test = np.ravel(y_test_unraveled)
+    #x, y_unraveled = load_data('PhishingData.csv', 1)
+    #y = np.ravel(y_unraveled)
+    #x_train, x_test, y_train, y_test = \
+    #    ms.train_test_split(x, np.ravel(y), test_size=0.80, random_state=0)
 
-    DTAnalysis(x_train, x_test, y_train, y_test)
-    KNNAnalysis(x_train, x_test, y_train, y_test)
-    MLPAnalysis(x_train, x_test, y_train, y_test)
-    BoostAnalysis(x_train, x_test, y_train, y_test)
-    SVCAnalysis(x_train, x_test, y_train, y_test)
+    x, y = load_data('SteelFaults.csv', 7)
+    x_train, x_test, y_train, y_test = \
+        ms.train_test_split(x, y, test_size=0.80, random_state=0)
+
+    scaled_x = scale_features(x)
+
+    # INITIAL TESTING
+    #DTAnalysis(x_train, x_test, y_train, y_test)
+    #KNNAnalysis(x_train, x_test, y_train, y_test)
+    #MLPAnalysis(x_train, x_test, y_train, y_test)
+    #BoostAnalysis(x_train, x_test, y_train, y_test)
+    #SVCAnalysis(x_train, x_test, y_train, y_test)
 
     """
     *** Phishing Data History ***
@@ -175,14 +179,14 @@ def main():
 
     """
         *** Steel Faults Data History ***
-    
+    """
     plot_learning_curve(DecisionTreeClassifier(), "Steel Faults Data DT", x, y)
-    plot_learning_curve(DecisionTreeClassifier(max_depth=3),
-                        "Steel Faults Data DT: Max Depth 3", x, y)
-    plot_learning_curve(DecisionTreeClassifier(max_depth=6),
-                        "Steel Faults Data DT: Max Depth 6", x, y)
-    plot_learning_curve(DecisionTreeClassifier(max_depth=9),
-                        "Steel Faults Data DT: Max Depth 9", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=15),
+                        "Steel Faults Data DT: Max Depth 15", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=19),
+                        "Steel Faults Data DT: Max Depth 19", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=23),
+                        "Steel Faults Data DT: Max Depth 23", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_features='sqrt'),
                         "Steel Faults Data DT: (sqrt n) Max Features", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_features='log2'),
@@ -194,39 +198,41 @@ def main():
     plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=8),
                         "Steel Faults Data DT: Max Leaf Nodes = 8", x, y)
 
-    plot_learning_curve(KNeighborsClassifier(n_neighbors=2),
+    plot_learning_curve(KNeighborsClassifier(n_neighbors=4),
                         "Steel Faults Data KNN: k = 2", x, y)
-    plot_learning_curve(KNeighborsClassifier(n_neighbors=5),
+    plot_learning_curve(KNeighborsClassifier(n_neighbors=6),
                         "Steel Faults Data KNN: k = 5", x, y)
     plot_learning_curve(KNeighborsClassifier(n_neighbors=8),
                         "Steel Faults Data KNN: k = 8", x, y)
     plot_learning_curve(KNeighborsClassifier(weights='distance'),
                         "Steel Faults Data KNN: weights='distance'", x, y)
+    plot_learning_curve(KNeighborsClassifier(weights='uniform'),
+                        "Steel Faults Data KNN: weights='uniform'", x, y)
     plot_learning_curve(KNeighborsClassifier(p=1),
                         "Steel Faults Data KNN: p=1 Manhattan Distance", x, y)
-    plot_learning_curve(KNeighborsClassifier(weights='distance', p=1),
-                        "Steel Faults Data KNN: weights='distance', p=1", x, y)
+    plot_learning_curve(KNeighborsClassifier(p=2),
+                        "Steel Faults Data KNN: p=2 Euclidean Distance", x, y)
 
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10),
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9),
                         "Steel Faults Data NN (unscaled)", x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10),
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9),
                         "Steel Faults Data NN", x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       solver='lbfgs'),
                         "Steel Faults Data NN: solver='lbfgs'", x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       solver='sgd'),
                         "Steel Faults Data NN: solver='sgd'", x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       solver='adam'),
                         "Steel Faults Data NN: solver='adam'", x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       learning_rate='constant'),
                         "Steel Faults Data NN: learning_rate='constant'", x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       learning_rate='invscaling'),
                         "Steel Faults Data NN: learning_rate='invscaling'", x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
+    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       learning_rate='adaptive'),
                         "Steel Faults Data NN: learning_rate='adaptive'", x, y)
 
@@ -234,41 +240,39 @@ def main():
                         "Steel Faults Data Boosting (unscaled)", x, y)
     plot_learning_curve(AdaBoostClassifier(), "Steel Faults Data Boosting", x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=2)),
-                        "Steel Faults Data: Boosting DT Depth 2", x, y)
+                                           DecisionTreeClassifier(max_depth=15)),
+                        "Steel Faults Data: Boosting DT Depth 15", x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=5)),
-                        "Steel Faults Data: Boosting DT Depth 5", x, y)
+                                           DecisionTreeClassifier(max_depth=19)),
+                        "Steel Faults Data: Boosting DT Depth 19", x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=8)),
-                        "Steel Faults Data: Boosting DT Depth 8", x, y)
+                                           DecisionTreeClassifier(max_depth=23)),
+                        "Steel Faults Data: Boosting DT Depth 23", x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=5),
-                                           learning_rate=.25),
-                        "Steel Faults Data: Boosting, learning_rate=0.25", x, y)
-    plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=5),
-                                           learning_rate=1.),
-                        "Steel Faults Data: Boosting, learning_rate=1.0", x, y)
-    plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=5),
+                                           DecisionTreeClassifier(max_depth=19),
                                            learning_rate=2.),
                         "Steel Faults Data: Boosting, learning_rate=2.0", x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=5),
-                                           n_estimators=25),
-                        "Steel Faults Data: Boosting, n_estimators=25", x, y)
+                                           DecisionTreeClassifier(max_depth=19),
+                                           learning_rate=3.5),
+                        "Steel Faults Data: Boosting, learning_rate=3.5", x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=5),
-                                           n_estimators=150),
-                        "Steel Faults Data: Boosting, n_estimators=150", x, y)
+                                           DecisionTreeClassifier(max_depth=19),
+                                           learning_rate=5.),
+                        "Steel Faults Data: Boosting, learning_rate=5.0", x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=5),
-                                           n_estimators=300),
-                        "Steel Faults Data: Boosting, n_estimators=300", x, y)
-    
+                                           DecisionTreeClassifier(max_depth=19),
+                                           n_estimators=50),
+                        "Steel Faults Data: Boosting, n_estimators=50", x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=19),
+                                           n_estimators=100),
+                        "Steel Faults Data: Boosting, n_estimators=100", x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=19),
+                                           n_estimators=200),
+                        "Steel Faults Data: Boosting, n_estimators=200", x, y)
 
-    plot_learning_curve(SVC(), "Steel Faults Data: SVC (unscaled)", x, y)
     plot_learning_curve(SVC(), "Steel Faults Data: SVC", x, y)
     plot_learning_curve(SVC(kernel='poly'),
                         "Steel Faults Data: SVC kernel='poly'", x, y)
@@ -278,21 +282,27 @@ def main():
                         "Steel Faults Data: SVC gamma='auto'", x, y)
     plot_learning_curve(SVC(gamma='scale'),
                         "Steel Faults Data: SVC gamma='scale'", x, y)
-    plot_learning_curve(SVC(kernel='poly', degree=2),
-                        "Steel Faults Data: SVC kernel='poly', deg 2", x, y)
     plot_learning_curve(SVC(kernel='poly', degree=3),
                         "Steel Faults Data: SVC kernel='poly', deg 3", x, y)
-    plot_learning_curve(SVC(kernel='poly', degree=4),
-                        "Steel Faults Data: SVC kernel='poly', deg 4", x, y)
+    plot_learning_curve(SVC(kernel='poly', degree=5),
+                        "Steel Faults Data: SVC kernel='poly', deg 5", x, y)
+    plot_learning_curve(SVC(kernel='poly', degree=7),
+                        "Steel Faults Data: SVC kernel='poly', deg 7", x, y)
+    plot_learning_curve(SVC(kernel='poly', coef0=-1.0),
+                        "Steel Faults Data: SVC kernel='poly', coef0=-1.0", x, y)
     plot_learning_curve(SVC(kernel='poly', coef0=0.0),
                         "Steel Faults Data: SVC kernel='poly', coef0=0.0", x, y)
     plot_learning_curve(SVC(kernel='poly', coef0=1.0),
                         "Steel Faults Data: SVC kernel='poly', coef0=1.0", x, y)
-    plot_learning_curve(SVC(kernel='poly', coef0=2.0),
-                        "Steel Faults Data: SVC kernel='poly', coef0=2.0", x, y)
-    plot_learning_curve(SVC(kernel='poly', coef0=3.0),
-                        "Steel Faults Data: SVC kernel='poly', coef0=3.0", x, y)
-    """
+
+    plot_learning_curve(KNeighborsClassifier(weights='distance'),
+                        "Phishing Data KNN: weights='distance'", x, y)
+    plot_learning_curve(KNeighborsClassifier(weights='uniform'),
+                        "Phishing Data KNN: weights='uniform'", x, y)
+    plot_learning_curve(KNeighborsClassifier(p=1),
+                        "Phishing Data KNN: p=1 Manhattan Distance", x, y)
+    plot_learning_curve(KNeighborsClassifier(p=2),
+                        "Phishing Data KNN: p=2 Euclidean Distance", x, y)
 
 
 if __name__ == '__main__':

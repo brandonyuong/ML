@@ -20,4 +20,4 @@ class MLPAnalysis(object):
 
         print("MLP Analysis:\n")
         print(report)
-        print("Test Set Accuracy: " + str(report_dict['accuracy']))
+        # print("Test Set Accuracy: " + str(report_dict['accuracy']))

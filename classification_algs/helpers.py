@@ -14,16 +14,15 @@ def load_data(csv_file, dep_vars):
     :param dep_vars: (int) number of dependent variables at end of file
     :return: Data frames to be input into learning algorithms
     """
-    x = pd.read_csv(csv_file)
-
-    df_copy = x.copy()
-    len_x = len(x.columns)
-    y = df_copy.iloc[:, len_x - dep_vars:len_x]
-
-    col_index = list(x.columns.values)
+    df = pd.read_csv(csv_file)
+    col_index = list(df.columns.values)
+    x = df.copy()
     for n in range(1, dep_vars + 1):
         dep_var_label = col_index[-1 * n]  # get label of the last column
         x.drop(columns=dep_var_label, axis=1, inplace=True)
+    #len_df = len(df.columns)
+    #y = df.iloc[:, len_df - dep_vars:len_df]
+    y = df.iloc[:, -1]
 
     return x, y
 
