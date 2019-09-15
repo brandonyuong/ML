@@ -17,14 +17,15 @@ from sklearn.feature_extraction import DictVectorizer
 
 def main():
 
-    #x, y_unraveled = load_data('PhishingData.csv', 1)
+    #x, y_unraveled = load_data('PhishingData.csv')
     #y = np.ravel(y_unraveled)
     #x_train, x_test, y_train, y_test = \
     #    ms.train_test_split(x, np.ravel(y), test_size=0.80, random_state=0)
 
-    x, y = load_data('SteelFaults.csv', 7)
-    x_train, x_test, y_train, y_test = \
-        ms.train_test_split(x, y, test_size=0.80, random_state=0)
+    #x, y = load_data('PhishingData.csv')
+    x, y = load_data('purchase_intent.csv')
+    #x_train, x_test, y_train, y_test = \
+    #    ms.train_test_split(x, y, test_size=0.80, random_state=0)
 
     scaled_x = scale_features(x)
 
@@ -64,10 +65,12 @@ def main():
                         "Phishing Data KNN: k = 8", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(weights='distance'),
                         "Phishing Data KNN: weights='distance'", scaled_x, y)
+    plot_learning_curve(KNeighborsClassifier(weights='uniform'),
+                        "Phishing Data KNN: weights='uniform'", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(p=1),
                         "Phishing Data KNN: p=1 Manhattan Distance", scaled_x, y)
-    plot_learning_curve(KNeighborsClassifier(weights='distance', p=1),
-                        "Phishing Data KNN: weights='distance', p=1", scaled_x, y)
+    plot_learning_curve(KNeighborsClassifier(p=2),
+                        "Phishing Data KNN: p=2 Euclidean Distance", scaled_x, y)
     
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10),
                         "Phishing Data NN (unscaled)", x, y)
@@ -156,7 +159,7 @@ def main():
 
 
     """
-    TEST
+    TEST Phishing Data
     
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=10,
                                       solver='lbfgs'),
@@ -178,131 +181,150 @@ def main():
     """
 
     """
-        *** Steel Faults Data History ***
-    """
-    plot_learning_curve(DecisionTreeClassifier(), "Steel Faults Data DT", x, y)
+        *** Purchase Intent Data History ***
+    
+    plot_learning_curve(DecisionTreeClassifier(), "Purchase Intent Data DT", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_depth=15),
-                        "Steel Faults Data DT: Max Depth 15", x, y)
+                        "Purchase Intent Data DT: Max Depth 15", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_depth=19),
-                        "Steel Faults Data DT: Max Depth 19", x, y)
+                        "Purchase Intent Data DT: Max Depth 19", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_depth=23),
-                        "Steel Faults Data DT: Max Depth 23", x, y)
+                        "Purchase Intent Data DT: Max Depth 23", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_features='sqrt'),
-                        "Steel Faults Data DT: (sqrt n) Max Features", x, y)
+                        "Purchase Intent Data DT: (sqrt n) Max Features", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_features='log2'),
-                        "Steel Faults Data DT: (log2 n) Max Features", x, y)
+                        "Purchase Intent Data DT: (log2 n) Max Features", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=2),
-                        "Steel Faults Data DT: Max Leaf Nodes = 2", x, y)
+                        "Purchase Intent Data DT: Max Leaf Nodes = 2", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=5),
-                        "Steel Faults Data DT: Max Leaf Nodes = 5", x, y)
+                        "Purchase Intent Data DT: Max Leaf Nodes = 5", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=8),
-                        "Steel Faults Data DT: Max Leaf Nodes = 8", x, y)
+                        "Purchase Intent Data DT: Max Leaf Nodes = 8", x, y)
 
     plot_learning_curve(KNeighborsClassifier(n_neighbors=4),
-                        "Steel Faults Data KNN: k = 2", x, y)
+                        "Purchase Intent Data KNN: k = 2", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(n_neighbors=6),
-                        "Steel Faults Data KNN: k = 5", x, y)
+                        "Purchase Intent Data KNN: k = 5", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(n_neighbors=8),
-                        "Steel Faults Data KNN: k = 8", x, y)
+                        "Purchase Intent Data KNN: k = 8", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(weights='distance'),
-                        "Steel Faults Data KNN: weights='distance'", x, y)
+                        "Purchase Intent Data KNN: weights='distance'", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(weights='uniform'),
-                        "Steel Faults Data KNN: weights='uniform'", x, y)
+                        "Purchase Intent Data KNN: weights='uniform'", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(p=1),
-                        "Steel Faults Data KNN: p=1 Manhattan Distance", x, y)
+                        "Purchase Intent Data KNN: p=1 Manhattan Distance", scaled_x, y)
     plot_learning_curve(KNeighborsClassifier(p=2),
-                        "Steel Faults Data KNN: p=2 Euclidean Distance", x, y)
+                        "Purchase Intent Data KNN: p=2 Euclidean Distance", scaled_x, y)
 
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9),
-                        "Steel Faults Data NN (unscaled)", x, y)
+                        "Purchase Intent Data NN (unscaled)", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9),
-                        "Steel Faults Data NN", x, y)
+                        "Purchase Intent Data NN", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       solver='lbfgs'),
-                        "Steel Faults Data NN: solver='lbfgs'", x, y)
+                        "Purchase Intent Data NN: solver='lbfgs'", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       solver='sgd'),
-                        "Steel Faults Data NN: solver='sgd'", x, y)
+                        "Purchase Intent Data NN: solver='sgd'", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       solver='adam'),
-                        "Steel Faults Data NN: solver='adam'", x, y)
+                        "Purchase Intent Data NN: solver='adam'", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       learning_rate='constant'),
-                        "Steel Faults Data NN: learning_rate='constant'", x, y)
+                        "Purchase Intent Data NN: learning_rate='constant'", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       learning_rate='invscaling'),
-                        "Steel Faults Data NN: learning_rate='invscaling'", x, y)
+                        "Purchase Intent Data NN: learning_rate='invscaling'", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
                                       learning_rate='adaptive'),
-                        "Steel Faults Data NN: learning_rate='adaptive'", x, y)
+                        "Purchase Intent Data NN: learning_rate='adaptive'", scaled_x, y)
 
     plot_learning_curve(AdaBoostClassifier(),
-                        "Steel Faults Data Boosting (unscaled)", x, y)
-    plot_learning_curve(AdaBoostClassifier(), "Steel Faults Data Boosting", x, y)
+                        "Purchase Intent Data Boosting (unscaled)", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(), "Purchase Intent Data Boosting", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=15)),
-                        "Steel Faults Data: Boosting DT Depth 15", x, y)
+                        "Purchase Intent Data: Boosting DT Depth 15", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19)),
-                        "Steel Faults Data: Boosting DT Depth 19", x, y)
+                        "Purchase Intent Data: Boosting DT Depth 19", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=23)),
-                        "Steel Faults Data: Boosting DT Depth 23", x, y)
+                        "Purchase Intent Data: Boosting DT Depth 23", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            learning_rate=2.),
-                        "Steel Faults Data: Boosting, learning_rate=2.0", x, y)
+                        "Purchase Intent Data: Boosting, learning_rate=2.0", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            learning_rate=3.5),
-                        "Steel Faults Data: Boosting, learning_rate=3.5", x, y)
+                        "Purchase Intent Data: Boosting, learning_rate=3.5", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            learning_rate=5.),
-                        "Steel Faults Data: Boosting, learning_rate=5.0", x, y)
+                        "Purchase Intent Data: Boosting, learning_rate=5.0", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            n_estimators=50),
-                        "Steel Faults Data: Boosting, n_estimators=50", x, y)
+                        "Purchase Intent Data: Boosting, n_estimators=50", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            n_estimators=100),
-                        "Steel Faults Data: Boosting, n_estimators=100", x, y)
+                        "Purchase Intent Data: Boosting, n_estimators=100", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            n_estimators=200),
-                        "Steel Faults Data: Boosting, n_estimators=200", x, y)
+                        "Purchase Intent Data: Boosting, n_estimators=200", scaled_x, y)
 
-    plot_learning_curve(SVC(), "Steel Faults Data: SVC", x, y)
+    plot_learning_curve(SVC(), "Purchase Intent Data: SVC", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly'),
-                        "Steel Faults Data: SVC kernel='poly'", x, y)
+                        "Purchase Intent Data: SVC kernel='poly'", scaled_x, y)
     plot_learning_curve(SVC(kernel='rbf'),
-                        "Steel Faults Data: SVC kernel='rbf'", x, y)
+                        "Purchase Intent Data: SVC kernel='rbf'", scaled_x, y)
     plot_learning_curve(SVC(gamma='auto'),
-                        "Steel Faults Data: SVC gamma='auto'", x, y)
+                        "Purchase Intent Data: SVC gamma='auto'", scaled_x, y)
     plot_learning_curve(SVC(gamma='scale'),
-                        "Steel Faults Data: SVC gamma='scale'", x, y)
+                        "Purchase Intent Data: SVC gamma='scale'", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', degree=3),
-                        "Steel Faults Data: SVC kernel='poly', deg 3", x, y)
+                        "Purchase Intent Data: SVC kernel='poly', deg 3", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', degree=5),
-                        "Steel Faults Data: SVC kernel='poly', deg 5", x, y)
+                        "Purchase Intent Data: SVC kernel='poly', deg 5", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', degree=7),
-                        "Steel Faults Data: SVC kernel='poly', deg 7", x, y)
+                        "Purchase Intent Data: SVC kernel='poly', deg 7", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', coef0=-1.0),
-                        "Steel Faults Data: SVC kernel='poly', coef0=-1.0", x, y)
+                        "Purchase Intent Data: SVC kernel='poly', coef0=-1.0", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', coef0=0.0),
-                        "Steel Faults Data: SVC kernel='poly', coef0=0.0", x, y)
+                        "Purchase Intent Data: SVC kernel='poly', coef0=0.0", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', coef0=1.0),
-                        "Steel Faults Data: SVC kernel='poly', coef0=1.0", x, y)
+                        "Purchase Intent Data: SVC kernel='poly', coef0=1.0", scaled_x, y)
+    """
 
-    plot_learning_curve(KNeighborsClassifier(weights='distance'),
-                        "Phishing Data KNN: weights='distance'", x, y)
-    plot_learning_curve(KNeighborsClassifier(weights='uniform'),
-                        "Phishing Data KNN: weights='uniform'", x, y)
-    plot_learning_curve(KNeighborsClassifier(p=1),
-                        "Phishing Data KNN: p=1 Manhattan Distance", x, y)
-    plot_learning_curve(KNeighborsClassifier(p=2),
-                        "Phishing Data KNN: p=2 Euclidean Distance", x, y)
+    """
+    TEST Purchase Intent
+    
+    plot_learning_curve(DecisionTreeClassifier(max_depth=4, max_features=None),
+                        "Purchase Intent Data DT TEST 1", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=18, max_features=None,
+                                               max_leaf_nodes=9),
+                        "Purchase Intent Data DT TEST 2", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_depth=7, max_features=None,
+                                               max_leaf_nodes=23),
+                        "Purchase Intent Data DT TEST 3", x, y)
+    
+    plot_learning_curve(KNeighborsClassifier(n_neighbors=18, p=2, weights='uniform'),
+                        "Purchase Intent Data KNN TEST 1", scaled_x, y)
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12, solver='adam'),
+                        "Purchase Intent Data NN TEST 1", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(learning_rate=1., n_estimators=300),
+                        "Purchase Intent Data Boost TEST 1", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(learning_rate=.1, n_estimators=100),
+                        "Purchase Intent Data Boost TEST 2", scaled_x, y)
+    
+    plot_learning_curve(SVC(kernel='rbf', gamma='auto'),
+                        "Purchase Intent Data SVC TEST 1", scaled_x, y)
+    """
+    plot_learning_curve(SVC(kernel='rbf', gamma='auto'),
+                        "Purchase Intent Data SVC TEST 1", scaled_x, y)
 
 
 if __name__ == '__main__':

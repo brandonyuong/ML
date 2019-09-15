@@ -6,14 +6,30 @@ from sklearn.model_selection import learning_curve
 from sklearn.preprocessing import StandardScaler
 
 
-def load_data(csv_file, dep_vars):
+def load_data(csv_file):
     """
     Load data from CSV file.  The results vector must be in the last column!
 
-    :param csv_file: (str) name of csv file
-    :param dep_vars: (int) number of dependent variables at end of file
+    :param csv_file: String name of csv file
     :return: Data frames to be input into learning algorithms
     """
+    df = pd.read_csv(csv_file)
+    col_index = list(df.columns.values)
+    result_label = col_index[-1]  # get label of the last column
+    x = df.drop(columns=result_label, axis=1)
+    y = df.iloc[:, -1]
+    return x, y
+
+
+"""
+def load_data(csv_file, dep_vars):
+    
+    #Load data from CSV file.  For multiple dependent vars
+
+    #:param csv_file: (str) name of csv file
+    #:param dep_vars: (int) number of dependent variables at end of file
+    #:return: Data frames to be input into learning algorithms
+    
     df = pd.read_csv(csv_file)
     col_index = list(df.columns.values)
     x = df.copy()
@@ -25,6 +41,7 @@ def load_data(csv_file, dep_vars):
     y = df.iloc[:, -1]
 
     return x, y
+"""
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5,
