@@ -237,7 +237,7 @@ def main():
                                       learning_rate='adaptive'),
                         "Purchase Intent Data NN: learning_rate='adaptive'", scaled_x, y)
 
-    plot_learning_curve(AdaBoostClassifier(), "Purchase Intent Data Boosting", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(), "Purchase Intent Data: Boosting", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=15)),
                         "Purchase Intent Data: Boosting DT Depth 15", scaled_x, y)
@@ -249,16 +249,16 @@ def main():
                         "Purchase Intent Data: Boosting DT Depth 23", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
-                                           learning_rate=-1.),
-                        "Purchase Intent Data: Boosting, learning_rate=-1.0", scaled_x, y)
-    plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=19),
-                                           learning_rate=-.1),
-                        "Purchase Intent Data: Boosting, learning_rate=-0.1", scaled_x, y)
+                                           learning_rate=.25),
+                        "Purchase Intent Data: Boosting, learning_rate=0.25", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            learning_rate=1.),
                         "Purchase Intent Data: Boosting, learning_rate=1.0", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=19),
+                                           learning_rate=2.),
+                        "Purchase Intent Data: Boosting, learning_rate=2.0", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            n_estimators=100),
@@ -283,12 +283,12 @@ def main():
                         "Purchase Intent Data: SVC kernel='poly', deg 5", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', degree=7),
                         "Purchase Intent Data: SVC kernel='poly', deg 7", scaled_x, y)
-    plot_learning_curve(SVC(kernel='rbf', coef0=-1.0),
-                        "Purchase Intent Data: SVC kernel='poly', coef0=-1.0", scaled_x, y)
-    plot_learning_curve(SVC(kernel='rbf', coef0=0.0),
-                        "Purchase Intent Data: SVC kernel='poly', coef0=0.0", scaled_x, y)
+    plot_learning_curve(SVC(kernel='rbf', coef0=.1),
+                        "Purchase Intent Data: SVC kernel='poly', coef0=0.1", scaled_x, y)
     plot_learning_curve(SVC(kernel='rbf', coef0=1.0),
                         "Purchase Intent Data: SVC kernel='poly', coef0=1.0", scaled_x, y)
+    plot_learning_curve(SVC(kernel='rbf', coef0=2.0),
+                        "Purchase Intent Data: SVC kernel='poly', coef0=2.0", scaled_x, y)
 
 
     """
@@ -329,8 +329,6 @@ def main():
     plot_learning_curve(SVC(kernel='rbf', gamma='auto'),
                         "Purchase Intent Data SVC TEST 1", scaled_x, y)
     """
-
-
 
 
 if __name__ == '__main__':
