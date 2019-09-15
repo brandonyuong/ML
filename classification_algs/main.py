@@ -23,7 +23,7 @@ def main():
     #    ms.train_test_split(x, np.ravel(y), test_size=0.80, random_state=0)
 
     #x, y = load_data('PhishingData.csv')
-    x, y = load_data('purchase_intent.csv')
+    x, y = load_trunc_data('purchase_intent.csv', 10000)
     #x_train, x_test, y_train, y_test = \
     #    ms.train_test_split(x, y, test_size=0.80, random_state=0)
 
@@ -182,7 +182,7 @@ def main():
 
     """
         *** Purchase Intent Data History ***
-    
+    """
     plot_learning_curve(DecisionTreeClassifier(), "Purchase Intent Data DT", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_depth=15),
                         "Purchase Intent Data DT: Max Depth 15", x, y)
@@ -216,31 +216,27 @@ def main():
     plot_learning_curve(KNeighborsClassifier(p=2),
                         "Purchase Intent Data KNN: p=2 Euclidean Distance", scaled_x, y)
 
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9),
-                        "Purchase Intent Data NN (unscaled)", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9),
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12),
                         "Purchase Intent Data NN", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12,
                                       solver='lbfgs'),
                         "Purchase Intent Data NN: solver='lbfgs'", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12,
                                       solver='sgd'),
                         "Purchase Intent Data NN: solver='sgd'", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12,
                                       solver='adam'),
                         "Purchase Intent Data NN: solver='adam'", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12,
                                       learning_rate='constant'),
                         "Purchase Intent Data NN: learning_rate='constant'", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12,
                                       learning_rate='invscaling'),
                         "Purchase Intent Data NN: learning_rate='invscaling'", scaled_x, y)
-    plot_learning_curve(MLPClassifier(activation='relu', hidden_layer_sizes=9,
+    plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12,
                                       learning_rate='adaptive'),
                         "Purchase Intent Data NN: learning_rate='adaptive'", scaled_x, y)
 
-    plot_learning_curve(AdaBoostClassifier(),
-                        "Purchase Intent Data Boosting (unscaled)", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(), "Purchase Intent Data Boosting", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=15)),
@@ -253,51 +249,47 @@ def main():
                         "Purchase Intent Data: Boosting DT Depth 23", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
-                                           learning_rate=2.),
-                        "Purchase Intent Data: Boosting, learning_rate=2.0", scaled_x, y)
+                                           learning_rate=-1.),
+                        "Purchase Intent Data: Boosting, learning_rate=-1.0", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
-                                           learning_rate=3.5),
-                        "Purchase Intent Data: Boosting, learning_rate=3.5", scaled_x, y)
+                                           learning_rate=-.1),
+                        "Purchase Intent Data: Boosting, learning_rate=-0.1", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
-                                           learning_rate=5.),
-                        "Purchase Intent Data: Boosting, learning_rate=5.0", scaled_x, y)
-    plot_learning_curve(AdaBoostClassifier(base_estimator=
-                                           DecisionTreeClassifier(max_depth=19),
-                                           n_estimators=50),
-                        "Purchase Intent Data: Boosting, n_estimators=50", scaled_x, y)
+                                           learning_rate=1.),
+                        "Purchase Intent Data: Boosting, learning_rate=1.0", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
                                            n_estimators=100),
                         "Purchase Intent Data: Boosting, n_estimators=100", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(base_estimator=
                                            DecisionTreeClassifier(max_depth=19),
-                                           n_estimators=200),
-                        "Purchase Intent Data: Boosting, n_estimators=200", scaled_x, y)
+                                           n_estimators=300),
+                        "Purchase Intent Data: Boosting, n_estimators=300", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=19),
+                                           n_estimators=500),
+                        "Purchase Intent Data: Boosting, n_estimators=500", scaled_x, y)
 
     plot_learning_curve(SVC(), "Purchase Intent Data: SVC", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly'),
                         "Purchase Intent Data: SVC kernel='poly'", scaled_x, y)
     plot_learning_curve(SVC(kernel='rbf'),
                         "Purchase Intent Data: SVC kernel='rbf'", scaled_x, y)
-    plot_learning_curve(SVC(gamma='auto'),
-                        "Purchase Intent Data: SVC gamma='auto'", scaled_x, y)
-    plot_learning_curve(SVC(gamma='scale'),
-                        "Purchase Intent Data: SVC gamma='scale'", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', degree=3),
                         "Purchase Intent Data: SVC kernel='poly', deg 3", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', degree=5),
                         "Purchase Intent Data: SVC kernel='poly', deg 5", scaled_x, y)
     plot_learning_curve(SVC(kernel='poly', degree=7),
                         "Purchase Intent Data: SVC kernel='poly', deg 7", scaled_x, y)
-    plot_learning_curve(SVC(kernel='poly', coef0=-1.0),
+    plot_learning_curve(SVC(kernel='rbf', coef0=-1.0),
                         "Purchase Intent Data: SVC kernel='poly', coef0=-1.0", scaled_x, y)
-    plot_learning_curve(SVC(kernel='poly', coef0=0.0),
+    plot_learning_curve(SVC(kernel='rbf', coef0=0.0),
                         "Purchase Intent Data: SVC kernel='poly', coef0=0.0", scaled_x, y)
-    plot_learning_curve(SVC(kernel='poly', coef0=1.0),
+    plot_learning_curve(SVC(kernel='rbf', coef0=1.0),
                         "Purchase Intent Data: SVC kernel='poly', coef0=1.0", scaled_x, y)
-    """
+
 
     """
     TEST Purchase Intent
@@ -315,6 +307,20 @@ def main():
                         "Purchase Intent Data KNN TEST 1", scaled_x, y)
     plot_learning_curve(MLPClassifier(activation='tanh', hidden_layer_sizes=12, solver='adam'),
                         "Purchase Intent Data NN TEST 1", scaled_x, y)
+    
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=4)),
+                        "Purchase Intent Data: Boosting DT Depth 4", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=7)),
+                        "Purchase Intent Data: Boosting DT Depth 7", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=19)),
+                        "Purchase Intent Data: Boosting DT Depth 19", scaled_x, y)
+    plot_learning_curve(AdaBoostClassifier(base_estimator=
+                                           DecisionTreeClassifier(max_depth=29)),
+                        "Purchase Intent Data: Boosting DT Depth 29", scaled_x, y)
+    
     plot_learning_curve(AdaBoostClassifier(learning_rate=1., n_estimators=300),
                         "Purchase Intent Data Boost TEST 1", scaled_x, y)
     plot_learning_curve(AdaBoostClassifier(learning_rate=.1, n_estimators=100),
@@ -323,8 +329,8 @@ def main():
     plot_learning_curve(SVC(kernel='rbf', gamma='auto'),
                         "Purchase Intent Data SVC TEST 1", scaled_x, y)
     """
-    plot_learning_curve(SVC(kernel='rbf', gamma='auto'),
-                        "Purchase Intent Data SVC TEST 1", scaled_x, y)
+
+
 
 
 if __name__ == '__main__':
