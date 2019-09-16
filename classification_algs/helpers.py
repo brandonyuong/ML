@@ -2,9 +2,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+from time import clock
+from collections import defaultdict
 
 from sklearn.model_selection import learning_curve
 from sklearn.preprocessing import StandardScaler
+import sklearn.model_selection as ms
 
 
 def load_data(csv_file):
@@ -65,7 +68,7 @@ def load_data(csv_file, dep_vars):
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5,
-                        n_jobs=None, train_sizes=np.linspace(.1, 1., 9)):
+                        n_jobs=None, train_sizes=np.linspace(.1, 1., 10)):
     """
     Function retrieved from:
     https://scikit-learn.org/stable/auto_examples/model_selection/plot_learning_curve.html
@@ -95,6 +98,37 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5,
     plt.plot(train_sizes, test_scores_mean, 'o-', color="#007fff",
              label="Cross-validation score")
 
+    plt.legend(loc="best")
+    plt.savefig(title + ".png")
+    plt.close()
+
+
+def plot_fit_times(estimator, title, x, y):
+    out = defaultdict(dict)
+    length_x = len(x)
+    split_floats = np.linspace(.1, .9, 9)
+    for split_float in split_floats:
+        x_train, x_test, y_train, y_test = ms.train_test_split(x, y,
+                                                               train_size=split_float)
+        start_time = clock()
+        clf = estimator
+        clf.fit(x_train, y_train)
+        out['train'][split_float] = clock() - start_time
+        start_time = clock()
+        clf.predict(x_test)
+        out['test'][split_float] = clock() - start_time
+    out = pd.DataFrame(out)
+    print(out)
+
+    plt.figure()
+    plt.title(title)
+    plt.xlabel("Training examples")
+    plt.ylabel("Time (s)")
+    plt.grid()
+    plt.plot(split_floats * length_x, out['test'], 'o-', color="#c1ffc1",
+             label="Test set")
+    plt.plot(split_floats * length_x, out['train'], 'o-', color="#50d3dc",
+             label="Train set")
     plt.legend(loc="best")
     plt.savefig(title + ".png")
     plt.close()
