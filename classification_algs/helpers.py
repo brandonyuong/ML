@@ -5,6 +5,7 @@ import random
 from time import clock
 from collections import defaultdict
 
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import learning_curve
 from sklearn.preprocessing import StandardScaler
 import sklearn.model_selection as ms
@@ -139,3 +140,63 @@ def scale_features(input_df):
     scaler.fit(input_df)
     scaled_features = scaler.transform(input_df)
     return pd.DataFrame(scaled_features)
+
+
+def plot_nn_solver_fit_times(title, x, y, list_of_hps):
+    plt.figure()
+    plt.title(title)
+    plt.xlabel("Training examples")
+    plt.ylabel("Time (s)")
+    plt.grid()
+
+    out = defaultdict(dict)
+    length_x = len(x)
+    split_floats = np.linspace(.1, .9, 9)
+    for hps in list_of_hps:
+        for split_float in split_floats:
+            x_train, x_test, y_train, y_test = ms.train_test_split(x, y,
+                                                                   train_size=split_float)
+            start_time = clock()
+            clf = MLPClassifier(solver=hps)
+            clf.fit(x_train, y_train)
+            out['Train'][split_float] = clock() - start_time
+        out = pd.DataFrame(out)
+        print(out)
+        plt.plot(split_floats * length_x, out['Train'], 'o-', color=random_color(),
+                 label=hps)
+
+    plt.legend(loc="best")
+    plt.savefig(title + ".png")
+    plt.close()
+
+
+def plot_nn_lr_fit_times(title, x, y, list_of_hps):
+    plt.figure()
+    plt.title(title)
+    plt.xlabel("Training examples")
+    plt.ylabel("Time (s)")
+    plt.grid()
+
+    out = defaultdict(dict)
+    length_x = len(x)
+    split_floats = np.linspace(.1, .9, 9)
+    for hps in list_of_hps:
+        for split_float in split_floats:
+            x_train, x_test, y_train, y_test = ms.train_test_split(x, y,
+                                                                   train_size=split_float)
+            start_time = clock()
+            clf = MLPClassifier(learning_rate=hps)
+            clf.fit(x_train, y_train)
+            out['Train'][split_float] = clock() - start_time
+        out = pd.DataFrame(out)
+        print(out)
+        plt.plot(split_floats * length_x, out['Train'], 'o-', color=random_color(),
+                 label=hps)
+
+    plt.legend(loc="best")
+    plt.savefig(title + ".png")
+    plt.close()
+
+
+def random_color():
+    return "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
