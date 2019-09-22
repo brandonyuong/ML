@@ -38,7 +38,8 @@ def main():
     """
 
     """
-    #*** Fit Times ***
+    *** Fit Times ***
+    """
     plot_fit_times(MLPClassifier(), "Phishing Data: NN Fit Time", scaled_x, y)
     plot_fit_times(AdaBoostClassifier(), "Phishing Data: Boost Fit Time", scaled_x, y)
     plot_fit_times(SVC(), "Phishing Data: SVM Fit Time", scaled_x, y)
@@ -57,11 +58,10 @@ def main():
                              ['lbfgs', 'adam', 'sgd'])
     plot_nn_lr_fit_times("Purchase Intent NN Learn Rate Fit Times", scaled_x2, y2,
                          ['constant', 'invscaling', 'adaptive'])
-    """
 
     """
     *** Phishing Data History ***
-    
+    """
     plot_learning_curve(DecisionTreeClassifier(), "Phishing Data DT", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_depth=3),
                         "Phishing Data DT: Max Depth 3", x, y)
@@ -85,6 +85,8 @@ def main():
                         "Phishing Data DT: Max Leaf Nodes = 10", x, y)
     plot_learning_curve(DecisionTreeClassifier(max_leaf_nodes=13),
                         "Phishing Data DT: Max Leaf Nodes = 13", x, y)
+    plot_learning_curve(DecisionTreeClassifier(max_features=None),
+                        "Phishing Data DT: None Max Features", x, y)
     
     plot_learning_curve(KNeighborsClassifier(n_neighbors=2),
                         "Phishing Data KNN: k = 2", scaled_x, y)
@@ -187,7 +189,7 @@ def main():
                         "Phishing Data SVC C=1.5", scaled_x, y)
     plot_learning_curve(SVC(C=2.5),
                         "Phishing Data SVC C=2.5", scaled_x, y)
-    """
+
 
     """
     TEST Phishing Data
@@ -212,7 +214,7 @@ def main():
 
     """
     *** Purchase Intent Data History ***
-    
+    """
     plot_learning_curve(DecisionTreeClassifier(max_depth=4),
                         "Purchase Intent Data DT: Max Depth 4", x2, y2)
     plot_learning_curve(DecisionTreeClassifier(max_depth=7),
@@ -368,7 +370,7 @@ def main():
                         "Purchase Intent Data SVC C=1.5", scaled_x2, y2)
     plot_learning_curve(SVC(C=2.5),
                         "Purchase Intent Data SVC C=2.5", scaled_x2, y2)
-    """
+
 
     """
     TEST Purchase Intent
