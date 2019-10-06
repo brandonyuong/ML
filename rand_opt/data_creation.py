@@ -7,7 +7,7 @@ from rand_opt.helpers import *
 def data_creation():
 
     # Load Data Set
-    x, y = load_trunc_data('purchase_intent.csv', 1000)
+    x, y = load_trunc_data('purchase_intent.csv', 10000)
     scaled_x = scale_features(x)
     x_train, x_test, y_train, y_test = ms.train_test_split(
         scaled_x, y, train_size=0.80, random_state=0)
