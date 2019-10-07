@@ -1,22 +1,12 @@
 import mlrose
 from time import process_time
-import random
 
 from rand_opt.helpers import *
 
 
-def generate_items(num):
-    wts = [None] * num
-    vals = [None] * num
-    for x in range(num):
-        wts[x] = random.randint(1, 100)
-        vals[x] = random.randint(1, 50)
-    return wts, vals
-
-
-def run_knaps_rhc(kp_weights, kp_values, max_wt, max_iters):
-    fitness = mlrose.Knapsack(kp_weights, kp_values, max_wt)
-    problem = mlrose.DiscreteOpt(length=len(kp_weights), fitness_fn=fitness,
+def run_onemax_rhc(ones_length, max_iters):
+    fitness = mlrose.OneMax()
+    problem = mlrose.DiscreteOpt(length=ones_length, fitness_fn=fitness,
                                  maximize=True)
 
     start_time = process_time()
@@ -30,9 +20,9 @@ def run_knaps_rhc(kp_weights, kp_values, max_wt, max_iters):
     return running_time, fit
 
 
-def run_knaps_sa(kp_weights, kp_values, max_wt, max_iters):
-    fitness = mlrose.Knapsack(kp_weights, kp_values, max_wt)
-    problem = mlrose.DiscreteOpt(length=len(kp_weights), fitness_fn=fitness,
+def run_onemax_sa(ones_length, max_iters):
+    fitness = mlrose.OneMax()
+    problem = mlrose.DiscreteOpt(length=ones_length, fitness_fn=fitness,
                                  maximize=True)
 
     start_time = process_time()
@@ -46,9 +36,9 @@ def run_knaps_sa(kp_weights, kp_values, max_wt, max_iters):
     return running_time, fit
 
 
-def run_knaps_ga(kp_weights, kp_values, max_wt, max_iters):
-    fitness = mlrose.Knapsack(kp_weights, kp_values, max_wt)
-    problem = mlrose.DiscreteOpt(length=len(kp_weights), fitness_fn=fitness,
+def run_onemax_ga(ones_length, max_iters):
+    fitness = mlrose.OneMax()
+    problem = mlrose.DiscreteOpt(length=ones_length, fitness_fn=fitness,
                                  maximize=True)
 
     start_time = process_time()
@@ -62,9 +52,9 @@ def run_knaps_ga(kp_weights, kp_values, max_wt, max_iters):
     return running_time, fit
 
 
-def run_knaps_mimic(kp_weights, kp_values, max_wt, max_iters):
-    fitness = mlrose.Knapsack(kp_weights, kp_values, max_wt)
-    problem = mlrose.DiscreteOpt(length=len(kp_weights), fitness_fn=fitness,
+def run_onemax_mimic(ones_length, max_iters):
+    fitness = mlrose.OneMax()
+    problem = mlrose.DiscreteOpt(length=ones_length, fitness_fn=fitness,
                                  maximize=True)
 
     start_time = process_time()
@@ -83,12 +73,11 @@ iter_list = [50, 100, 500, 1000, 2000, 4000, 8000]
 # Run for each total number of items
 for i in range(3):
     if i == 0:
-        weights, values = generate_items(10)
+        ones_len = 10
     elif i == 1:
-        weights, values = generate_items(50)
+        ones_len = 50
     else:
-        weights, values = generate_items(100)
-    max_w = 0.5
+        ones_len = 100
 
     rhc_avgs = [None] * len(iter_list)
     sa_avgs = [None] * len(iter_list)
@@ -112,10 +101,10 @@ for i in range(3):
 
         # Run 3 times each
         for k in range(runs_per_iter):
-            fit_time_rhc[k], fit_rhc[k] = run_knaps_rhc(weights, values, max_w, j)
-            fit_time_sa[k], fit_sa[k] = run_knaps_sa(weights, values, max_w, j)
-            fit_time_ga[k], fit_ga[k] = run_knaps_ga(weights, values, max_w, j)
-            fit_time_mimic[k], fit_mimic[k] = run_knaps_mimic(weights, values, max_w, j)
+            fit_time_rhc[k], fit_rhc[k] = run_onemax_rhc(ones_len, j)
+            fit_time_sa[k], fit_sa[k] = run_onemax_sa(ones_len, j)
+            fit_time_ga[k], fit_ga[k] = run_onemax_ga(ones_len, j)
+            fit_time_mimic[k], fit_mimic[k] = run_onemax_mimic(ones_len, j)
 
         rhc_avgs[counter] = [avg_list(fit_time_rhc), avg_list(fit_rhc)]
         sa_avgs[counter] = [avg_list(fit_time_sa), avg_list(fit_sa)]
@@ -127,7 +116,7 @@ for i in range(3):
     print("SA (Time, Train, Test): ", sa_avgs)
     print("GA (Time, Train, Test): ", ga_avgs)
     print("MIMIC (Time, Train, Test): ", mimic_avgs)
-    name = "KP " + str(len(weights)) + " Items Results.txt"
+    name = "OneMax: Length " + str(ones_len) + " Results.txt"
     with open(name, "w", newline="") as f:
         f.write("RHC: ")
         for item in rhc_avgs:
@@ -151,7 +140,7 @@ for i in range(3):
 
     xi = list(range(len(iter_list)))
 
-    title = "KP " + str(len(weights)) + " Items Fit Times"
+    title = "OneMax: Length " + str(ones_len) + " Fit Times"
     plt.title(title)
     plt.xlabel("Iterations")
     plt.ylabel("Fit Time (s)")
@@ -166,7 +155,7 @@ for i in range(3):
 
     plt.clf()
 
-    title = "KP " + str(len(weights)) + " Items Fit"
+    title = "OneMax: Length " + str(ones_len) + " Fit"
     plt.title(title)
     plt.xlabel("Iterations")
     plt.ylabel("Fitness")
