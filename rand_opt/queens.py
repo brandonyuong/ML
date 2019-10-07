@@ -83,9 +83,9 @@ for i in range(3):
     if i == 0:
         queens = 8
     elif i == 1:
-        queens = 16
-    else:
         queens = 32
+    else:
+        queens = 128
 
     rhc_avgs = [None] * len(iter_list)
     sa_avgs = [None] * len(iter_list)
@@ -124,7 +124,7 @@ for i in range(3):
     print("SA (Time, Train, Test): ", sa_avgs)
     print("GA (Time, Train, Test): ", ga_avgs)
     print("MIMIC (Time, Train, Test): ", mimic_avgs)
-    name = str(queens) + " Queens Results.txt"
+    name = "Queens x" + str(queens) + " Results.txt"
     with open(name, "w", newline="") as f:
         f.write("RHC: ")
         for item in rhc_avgs:
@@ -148,7 +148,7 @@ for i in range(3):
 
     xi = list(range(len(iter_list)))
 
-    title = str(queens) + " Queens Fit Times"
+    title = "Queens x" + str(queens) + " Fit Times"
     plt.title(title)
     plt.xlabel("Iterations")
     plt.ylabel("Fit Time (s)")
@@ -163,15 +163,15 @@ for i in range(3):
 
     plt.clf()
 
-    title = str(queens) + " Queens Fit"
+    title = "Queens x" + str(queens) + " Fit"
     plt.title(title)
     plt.xlabel("Iterations")
     plt.ylabel("Attacking Queens")
     plt.xticks(xi, iter_list)
-    plot_rand_opt(xi, rhc_avgs_arr[:, 1], plot_label="RHC", custom_color="#f92672")
-    plot_rand_opt(xi, sa_avgs_arr[:, 1], plot_label="SA", custom_color="#007fff")
-    plot_rand_opt(xi, ga_avgs_arr[:, 1], plot_label="GA", custom_color="#05acbf")
-    plot_rand_opt(xi, mimic_avgs_arr[:, 1], plot_label="MIMIC", custom_color="#b5b9fc")
+    plot_rand_opt(xi, -1 * rhc_avgs_arr[:, 1], plot_label="RHC", custom_color="#f92672")
+    plot_rand_opt(xi, -1 * sa_avgs_arr[:, 1], plot_label="SA", custom_color="#007fff")
+    plot_rand_opt(xi, -1 * ga_avgs_arr[:, 1], plot_label="GA", custom_color="#05acbf")
+    plot_rand_opt(xi, -1 * mimic_avgs_arr[:, 1], plot_label="MIMIC", custom_color="#b5b9fc")
     plt.grid()
     plt.legend(loc="best")
     plt.savefig(title + ".png")
