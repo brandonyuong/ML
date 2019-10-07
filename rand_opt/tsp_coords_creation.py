@@ -16,4 +16,4 @@ def tsp_coords_creation(num):
 
 
 if __name__ == '__main__':
-    tsp_coords_creation(10)
+    tsp_coords_creation(50)

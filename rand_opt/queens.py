@@ -1,16 +1,20 @@
 import mlrose
-import csv
 from time import process_time
 
 from rand_opt.helpers import *
 
 
-def run_tsp_rhc(list_of_coords, max_iters):
-    problem = mlrose.TSPOpt(length=len(list_of_coords), coords=list_of_coords,
-                            maximize=False)
+def run_queens_rhc(num_queens, max_iters):
+    fitness = mlrose.Queens()
+    problem = mlrose.DiscreteOpt(length=num_queens, fitness_fn=fitness,
+                                 maximize=False, max_val=num_queens)
+
+    # Define initial state
+    init_state = np.array(list(range(num_queens)))
 
     start_time = process_time()
-    state, fit, curve = mlrose.random_hill_climb(problem, max_iters=max_iters)
+    state, fit, curve = mlrose.random_hill_climb(problem, max_iters=max_iters,
+                                                 init_state=init_state)
     running_time = process_time() - start_time
 
     print('*** RHC ***')
@@ -20,12 +24,17 @@ def run_tsp_rhc(list_of_coords, max_iters):
     return running_time, fit
 
 
-def run_tsp_sa(list_of_coords, max_iters):
-    problem = mlrose.TSPOpt(length=len(list_of_coords), coords=list_of_coords,
-                            maximize=False)
+def run_queens_sa(num_queens, max_iters):
+    fitness = mlrose.Queens()
+    problem = mlrose.DiscreteOpt(length=num_queens, fitness_fn=fitness,
+                                 maximize=False, max_val=num_queens)
+
+    # Define initial state
+    init_state = np.array(list(range(num_queens)))
 
     start_time = process_time()
-    state, fit, curve = mlrose.simulated_annealing(problem, max_iters=max_iters)
+    state, fit, curve = mlrose.simulated_annealing(problem, max_iters=max_iters,
+                                                   init_state=init_state)
     running_time = process_time() - start_time
 
     print('*** SA ***')
@@ -35,9 +44,10 @@ def run_tsp_sa(list_of_coords, max_iters):
     return running_time, fit
 
 
-def run_tsp_ga(list_of_coords, max_iters):
-    problem = mlrose.TSPOpt(length=len(list_of_coords), coords=list_of_coords,
-                            maximize=False)
+def run_queens_ga(num_queens, max_iters):
+    fitness = mlrose.Queens()
+    problem = mlrose.DiscreteOpt(length=num_queens, fitness_fn=fitness,
+                                 maximize=False, max_val=num_queens)
 
     start_time = process_time()
     state, fit, curve = mlrose.genetic_alg(problem, max_iters=max_iters)
@@ -50,9 +60,10 @@ def run_tsp_ga(list_of_coords, max_iters):
     return running_time, fit
 
 
-def run_tsp_mimic(list_of_coords, max_iters):
-    problem = mlrose.TSPOpt(length=len(list_of_coords), coords=list_of_coords,
-                            maximize=False)
+def run_queens_mimic(num_queens, max_iters):
+    fitness = mlrose.Queens()
+    problem = mlrose.DiscreteOpt(length=num_queens, fitness_fn=fitness,
+                                 maximize=False, max_val=num_queens)
 
     start_time = process_time()
     state, fit, curve = mlrose.mimic(problem, max_iters=max_iters)
@@ -65,31 +76,17 @@ def run_tsp_mimic(list_of_coords, max_iters):
     return running_time, fit
 
 
-coords_list_10 = []
-with open('TSP_10_coords.csv', 'r') as filehandle:
-    for line in filehandle:
-        coords_list_10.append(tuple(map(int, line.strip().split(','))))
-
-coords_list_50 = []
-with open('TSP_50_coords.csv', 'r') as filehandle:
-    for line in filehandle:
-        coords_list_50.append(tuple(map(int, line.strip().split(','))))
-
-coords_list_100 = []
-with open('TSP_100_coords.csv', 'r') as filehandle:
-    for line in filehandle:
-        coords_list_100.append(tuple(map(int, line.strip().split(','))))
-
 iter_list = [50, 100, 500, 1000, 2000, 4000, 8000]
 
-# Run for each coords list
+# Run for each queens amount
 for i in range(3):
     if i == 0:
-        coords_list = coords_list_10
+        queens = 8
     elif i == 1:
-        coords_list = coords_list_50
+        queens = 16
     else:
-        coords_list = coords_list_100
+        queens = 32
+
     rhc_avgs = [None] * len(iter_list)
     sa_avgs = [None] * len(iter_list)
     ga_avgs = [None] * len(iter_list)
@@ -112,22 +109,22 @@ for i in range(3):
 
         # Run 3 times each
         for k in range(runs_per_iter):
-            fit_time_rhc[k], fit_rhc[k] = run_tsp_rhc(coords_list, j)
-            fit_time_sa[k], fit_sa[k] = run_tsp_sa(coords_list, j)
-            fit_time_ga[k], fit_ga[k] = run_tsp_ga(coords_list, j)
-            fit_time_mimic[k], fit_mimic[k] = run_tsp_mimic(coords_list, j)
+            fit_time_rhc[k], fit_rhc[k] = run_queens_rhc(queens, j)
+            fit_time_sa[k], fit_sa[k] = run_queens_sa(queens, j)
+            fit_time_ga[k], fit_ga[k] = run_queens_ga(queens, j)
+            fit_time_mimic[k], fit_mimic[k] = run_queens_mimic(queens, j)
 
-        rhc_avgs[counter] = [avg_list(fit_time_rhc), 1 / avg_list(fit_rhc)]
-        sa_avgs[counter] = [avg_list(fit_time_sa), 1 / avg_list(fit_sa)]
-        ga_avgs[counter] = [avg_list(fit_time_ga), 1 / avg_list(fit_ga)]
-        mimic_avgs[counter] = [avg_list(fit_time_mimic), 1 / avg_list(fit_mimic)]
+        rhc_avgs[counter] = [avg_list(fit_time_rhc), avg_list(fit_rhc)]
+        sa_avgs[counter] = [avg_list(fit_time_sa), avg_list(fit_sa)]
+        ga_avgs[counter] = [avg_list(fit_time_ga), avg_list(fit_ga)]
+        mimic_avgs[counter] = [avg_list(fit_time_mimic), avg_list(fit_mimic)]
         counter += 1
 
     print("RHC (Time, Train, Test): ", rhc_avgs)
     print("SA (Time, Train, Test): ", sa_avgs)
     print("GA (Time, Train, Test): ", ga_avgs)
     print("MIMIC (Time, Train, Test): ", mimic_avgs)
-    name = "TSP: " + str(len(coords_list)) + " Coords Results.txt"
+    name = str(queens) + " Queens Results.txt"
     with open(name, "w", newline="") as f:
         f.write("RHC: ")
         for item in rhc_avgs:
@@ -151,7 +148,7 @@ for i in range(3):
 
     xi = list(range(len(iter_list)))
 
-    title = "TSP: " + str(len(coords_list)) + " Coords Fit Times"
+    title = str(queens) + " Queens Fit Times"
     plt.title(title)
     plt.xlabel("Iterations")
     plt.ylabel("Fit Time (s)")
@@ -166,10 +163,10 @@ for i in range(3):
 
     plt.clf()
 
-    title = "TSP: " + str(len(coords_list)) + " Coords Fit"
+    title = str(queens) + " Queens Fit"
     plt.title(title)
     plt.xlabel("Iterations")
-    plt.ylabel("1 / (Fit Distance)")
+    plt.ylabel("Attacking Queens")
     plt.xticks(xi, iter_list)
     plot_rand_opt(xi, rhc_avgs_arr[:, 1], plot_label="RHC", custom_color="#f92672")
     plot_rand_opt(xi, sa_avgs_arr[:, 1], plot_label="SA", custom_color="#007fff")
