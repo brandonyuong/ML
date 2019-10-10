@@ -41,11 +41,11 @@ def load_trunc_data(csv_file, max_samples):
 
 
 # Plot onto an open plot figure
-def plot_rand_opt(X, y, plot_label, custom_color=None):
+def plot_rand_opt(X, y, plot_label, custom_color=None, marker="o"):
     if custom_color is None:
         custom_color = random_color()
     plt.grid()
-    plt.plot(X, y, 'o-', color=custom_color, label=plot_label)
+    plt.plot(X, y, 'o-', color=custom_color, label=plot_label, marker=marker)
     plt.legend(loc="best")
 
 
