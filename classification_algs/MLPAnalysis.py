@@ -9,15 +9,16 @@ class MLPAnalysis(object):
     """
 
     def __init__(self, x_train, x_test, y_train, y_test, **kwargs):
-        scaled_x_train = scale_features(x_train)
-        scaled_x_test = scale_features(x_test)
+        x_train = scale_features(x_train)
+        x_test = scale_features(x_test)
 
         mlp = MLPClassifier(**kwargs)
-        mlp.fit(scaled_x_train, y_train)
-        predictions = mlp.predict(scaled_x_test)
+        mlp.fit(x_train, y_train)
+        predictions = mlp.predict(x_test)
         report = classification_report(y_test, predictions)
         report_dict = classification_report(y_test, predictions, output_dict=True)
+        self.accuracy = str(report_dict['accuracy'])
 
         print("MLP Analysis:\n")
         print(report)
-        # print("Test Set Accuracy: " + str(report_dict['accuracy']))
+        print("Test Set Accuracy: " + self.accuracy)
