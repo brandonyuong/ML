@@ -82,7 +82,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=5,
              label="Cross-validation score")
 
     plt.legend(loc="best")
-    plt.savefig(title + ".png")
+    plt.savefig("plots/" + title + ".png")
     plt.close()
 
 
@@ -113,7 +113,7 @@ def plot_fit_times(estimator, title, x, y):
     plt.plot(split_floats * length_x, out['train'], 'o-', color="#50d3dc",
              label="Train set")
     plt.legend(loc="best")
-    plt.savefig(title + ".png")
+    plt.savefig("plots/" + title + ".png")
     plt.close()
 
 
