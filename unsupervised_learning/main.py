@@ -4,6 +4,7 @@ import sklearn.model_selection as ms
 from sklearn.neural_network import MLPClassifier
 from classification_algs.MLPAnalysis import MLPAnalysis
 from unsupervised_learning.KMeansPlots import KMeansPlots
+from unsupervised_learning.EMPlots import EMPlots
 from sklearn.cluster import KMeans
 from sklearn.metrics import mutual_info_score
 
@@ -32,8 +33,12 @@ def main():
 
     print("*** KMeans ***")
 
-    #KMeansPlots(x1_train, y1_train, "Seeds", 6)
-    #KMeansPlots(x2_train, y2_train, "Driver Face", 10)
+    KMeansPlots(x1_train, y1_train, "Seeds", 6)
+    KMeansPlots(x2_train, y2_train, "Driver Face", 17)
+
+    print("*** EM ***")
+    #EMPlots(x1_train, "Seeds", 6)
+    #EMPlots(x2_train, "Driver Face", 17)
 
 
 if __name__ == '__main__':

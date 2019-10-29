@@ -8,8 +8,8 @@ from sklearn.metrics import normalized_mutual_info_score
 
 class KMeansPlots(object):
 
-    def __init__(self, x_train, y_train, title, n=4):
-        self.title = title
+    def __init__(self, x_train, y_train, data_name, n=4):
+        self.title = data_name
         self.X = x_train
         self.y = y_train
         self.plot_silhouette(self.X, n)
