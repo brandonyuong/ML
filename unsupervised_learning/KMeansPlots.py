@@ -3,7 +3,7 @@ import matplotlib.cm as cm
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_samples, silhouette_score
-from sklearn.metrics import normalized_mutual_info_score
+from sklearn.metrics import normalized_mutual_info_score, v_measure_score
 
 
 class KMeansPlots(object):
@@ -12,20 +12,24 @@ class KMeansPlots(object):
         self.title = data_name
         self.X = x_train
         self.y = y_train
-        self.plot_silhouette(self.X, n)
-        self.plot_mutual_info(self.X, self.y, n)
+        self.n = n
+        self.plot_mutual_info()
 
-    def plot_mutual_info(self, X, y, n):
+    def plot_mutual_info(self):
+        X = self.X
+        y = self.y
+        n = self.n
+
         mi_list = []
         range_n_clusters = range(2, n + 1)
         for n in range_n_clusters:
             clusterer = KMeans(n_clusters=n, random_state=2)
             cluster_labels = clusterer.fit_predict(X)
             mi = normalized_mutual_info_score(y, cluster_labels)
-            print("k=" + str(n) + " Normalized Mutual Info Score: " + str(mi))
+            print("k=" + str(n) + " KM Normalized Mutual Info Score: " + str(mi))
             mi_list.append(mi)
         plt.figure()
-        title = self.title + " Normalized Mutual Info"
+        title = self.title + " KM Normalized Mutual Info"
         plt.title(title)
         plt.xlabel("n-clusters")
         plt.ylabel("Mutual Info Score")
@@ -36,8 +40,35 @@ class KMeansPlots(object):
         plt.savefig("plots/" + title + ".png")
         plt.close()
 
+    def plot_v(self):
+        X = self.X
+        y = self.y
+        n = self.n
+
+        v_list = []
+        range_n_clusters = range(2, n + 1)
+        for n in range_n_clusters:
+            clusterer = KMeans(n_clusters=n, random_state=2)
+            cluster_labels = clusterer.fit_predict(X)
+            v_score = v_measure_score(y, cluster_labels)
+            print("k=" + str(n) + " KM V Score: " + str(v_score))
+            v_list.append(v_score)
+        plt.figure()
+        title = self.title + " KM V Score"
+        plt.title(title)
+        plt.xlabel("n-clusters")
+        plt.ylabel("V Score")
+        plt.grid()
+
+        plt.plot(range_n_clusters, v_list, 'o-', color="#f92672")
+
+        plt.savefig("plots/" + title + ".png")
+        plt.close()
+
     # https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_silhouette_analysis.html
-    def plot_silhouette(self, X, n):
+    def plot_silhouette(self):
+        X = self.X
+        n = self.n
         range_n_clusters = range(2, n + 1)
         mean_silhouette = []
 

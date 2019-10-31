@@ -5,6 +5,10 @@ from sklearn.neural_network import MLPClassifier
 from classification_algs.MLPAnalysis import MLPAnalysis
 from unsupervised_learning.KMeansPlots import KMeansPlots
 from unsupervised_learning.EMPlots import EMPlots
+from unsupervised_learning.PCAPlots import PCAPlots
+from unsupervised_learning.ICAPlots import ICAPlots
+from unsupervised_learning.RPPlots import RPPlots
+from unsupervised_learning.LDAPlots import LDAPlots
 from sklearn.cluster import KMeans
 from sklearn.metrics import mutual_info_score
 
@@ -28,17 +32,58 @@ def main():
 
     print("*** Driver Face Data ***")
     x2_train, x2_test, y2_train, y2_test = ms.train_test_split(
-        scaled_x2, y2, train_size=300)
+        scaled_x2, y2, train_size=300, random_state=2)
     #MLPAnalysis(x2_train, x2_test, y2_train, y2_test)
-
+    """
     print("*** KMeans ***")
-
-    KMeansPlots(x1_train, y1_train, "Seeds", 6)
-    KMeansPlots(x2_train, y2_train, "Driver Face", 17)
+    seeds_km = KMeansPlots(x1_train, y1_train, "Seeds", 7)
+    driver_km = KMeansPlots(x2_train, y2_train, "Driver Face", 17)
+    seeds_km.plot_silhouette()
+    driver_km.plot_silhouette()
 
     print("*** EM ***")
-    #EMPlots(x1_train, "Seeds", 6)
-    #EMPlots(x2_train, "Driver Face", 17)
+    EMPlots(x1_train, y1_train, x1_test, y1_test, "Seeds", 7)
+    EMPlots(x2_train, y2_train, x2_test, y2_test, "Driver Face", 17)
+
+    print("*** PCA ***")
+    seeds_pca = PCAPlots(x1_train, "Seeds", 7)
+    driver_pca = PCAPlots(x2_train, "Driver Face", 17)
+    transformed = seeds_pca.get_transformed_features(3)
+    KMeansPlots(transformed, y1_train, "Seeds with PCA", 6)
+    EMPlots(transformed, y1_train, "Seeds with PCA", 6)
+    transformed = driver_pca.get_transformed_features(6)
+    KMeansPlots(transformed, y2_train, "Driver with PCA", 9)
+    EMPlots(transformed, y2_train, "Driver with PCA", 9)
+    
+    print("*** ICA ***")
+    seeds_ica = ICAPlots(x1_train, "Seeds", 6)
+    driver_ica = ICAPlots(x2_train, "Driver Face", 17)
+    transformed = seeds_ica.get_transformed_features(6)
+    KMeansPlots(transformed, y1_train, "Seeds with ICA", 9)
+    EMPlots(transformed, y1_train, "Seeds with ICA", 9)
+    transformed = driver_ica.get_transformed_features(10)
+    KMeansPlots(transformed, y2_train, "Driver with ICA", 13)
+    EMPlots(transformed, y2_train, "Driver with ICA", 13)
+
+    print("*** RP ***")
+    seeds_rp = RPPlots(x1_train, y1_train, x1_test, y1_test, "Seeds", 6)
+    driver_rp = RPPlots(x2_train, y2_train, x2_test, y2_test, "Driver Face", 17)
+    transformed = seeds_rp.get_transformed_features(4)
+    KMeansPlots(transformed, y1_train, "Seeds with RP", 7)
+    EMPlots(transformed, y1_train, "Seeds with RP", 7)
+    transformed = driver_rp.get_transformed_features(6)
+    KMeansPlots(transformed, y2_train, "Driver with RP", 9)
+    EMPlots(transformed, y2_train, "Driver with RP", 9)
+"""
+    print("*** LDA ***")
+    seeds_lda = LDAPlots(x1_train, y1_train, x1_test, y1_test, "Seeds", 6)
+    driver_lda = LDAPlots(x2_train, y2_train, x2_test, y2_test, "Driver Face", 17)
+    transformed = seeds_lda.get_transformed_features(2)
+    KMeansPlots(transformed, y1_train, "Seeds with LDA", 5)
+    EMPlots(transformed, y1_train, "Seeds with LDA", 5)
+    transformed = driver_lda.get_transformed_features(3)
+    KMeansPlots(transformed, y2_train, "Driver with LDA", 6)
+    EMPlots(transformed, y2_train, "Driver with LDA", 6)
 
 
 if __name__ == '__main__':

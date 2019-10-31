@@ -9,9 +9,6 @@ class MLPAnalysis(object):
     """
 
     def __init__(self, x_train, x_test, y_train, y_test, **kwargs):
-        x_train = scale_features(x_train)
-        x_test = scale_features(x_test)
-
         mlp = MLPClassifier(**kwargs)
         mlp.fit(x_train, y_train)
         predictions = mlp.predict(x_test)
