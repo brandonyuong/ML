@@ -9,23 +9,23 @@ class PCAPlots(object):
         self.x_train = x_train
         self.data_name = data_name
         self.n = n
-        self.plot_covariance()
+        self.plot_explained_var_ratio()
 
-    def plot_covariance(self):
+    def plot_explained_var_ratio(self):
         X = self.x_train
         n = self.n
         range_n_components = np.arange(1, n + 1)
         pca = PCA(n_components=n, random_state=2)
         pca.fit(X)
-        covar_ratio = pca.explained_variance_ratio_
+        explained_var = pca.explained_variance_ratio_
         plt.figure()
-        title = self.data_name + " PCA Explained Covariance Ratio"
+        title = self.data_name + " PCA Explained Variance Ratio"
         plt.title(title)
         plt.xlabel("n-components")
-        plt.ylabel("Explained Covariance Ratio")
+        plt.ylabel("Explained Variance Ratio")
         plt.grid()
 
-        plt.plot(range_n_components, covar_ratio, 'o-', color="#f92672")
+        plt.plot(range_n_components, explained_var, 'o-', color="#f92672")
 
         plt.savefig("plots/" + title + ".png")
         plt.close()

@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.sparse as sps
+from scipy.linalg import pinv
 import pandas as pd
 from sklearn.random_projection import SparseRandomProjection
 from sklearn.ensemble import RandomForestClassifier
@@ -15,6 +17,38 @@ class RPPlots(object):
         self.data_name = data_name
         self.n = n
         self.plot_rf_accuracy()
+        self.plot_recon_err()
+
+    def plot_recon_err(self):
+        n = self.n
+        recon_errs = np.zeros(n)
+        range_n_components = np.arange(1, n + 1)
+        for i, j in enumerate(range_n_components):
+            rp = SparseRandomProjection(n_components=j, random_state=2)
+            rp.fit(self.x_train)
+            recon_errs[i] = self.recon_error(rp, self.x_train)
+        plt.figure()
+        title = self.data_name + " RP Reconstruction Error"
+        plt.title(title)
+        plt.xlabel("n-components")
+        plt.ylabel("Reconstruction Error")
+        plt.grid()
+
+        plt.plot(range_n_components, recon_errs, 'o-', color="#f92672",
+                 label='Random Projection')
+
+        plt.savefig("plots/" + title + ".png")
+        plt.close()
+
+    @staticmethod
+    def recon_error(projections, X):
+        W = projections.components_
+        if sps.issparse(W):
+            W = W.todense()
+        p = pinv(W)
+        reconstructed = ((p @ W) @ (X.T)).T  # Unproject projected data
+        errors = np.square(X - reconstructed)
+        return np.nanmean(errors)
 
     def plot_rf_accuracy(self):
         n = self.n
