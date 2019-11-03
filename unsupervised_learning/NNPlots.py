@@ -132,9 +132,11 @@ class NNPlots(object):
                 clusterer.set_params(n_components=num)
             clusterer.fit(self.x_train)
             transformed_x = clusterer.transform(self.x_train)
-            model.fit(transformed_x, self.y_train)
-            test = clusterer.transform(self.x_test)
-            nn_acc = accuracy_score(model.predict(test), self.y_test)
+            new_x = np.column_stack((self.x_train, transformed_x))
+            model.fit(new_x, self.y_train)
+            transformed_x_test = clusterer.transform(self.x_test)
+            new_x_test = np.column_stack((self.x_test, transformed_x_test))
+            nn_acc = accuracy_score(model.predict(new_x_test), self.y_test)
             acc[i] = nn_acc
 
         x = np.arange(len(n) + 1)
@@ -171,8 +173,9 @@ class NNPlots(object):
                 clusterer.set_params(n_components=num)
             clusterer.fit(self.x_train)
             transformed_x = clusterer.transform(self.x_train)
+            new_x = np.column_stack((self.x_train, transformed_x))
             start_time = clock()
-            model.fit(transformed_x, self.y_train)
+            model.fit(new_x, self.y_train)
             fit_times[i] = clock() - start_time
 
         x = np.arange(len(n) + 1)
