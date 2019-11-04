@@ -49,7 +49,7 @@ def main():
     print("*** PCA ***")
     seeds_pca = PCAPlots(x1_train, y1_train, x1_test, y1_test, "Seeds", 6)
     driver_pca = PCAPlots(x2_train, y2_train, x2_test, y2_test, "Driver", 16)
-    transformed = seeds_pca.get_transformed_features(2)
+    transformed = seeds_pca.get_transformed_features(3)
     KMeansPlots(transformed, y1_train, "Seeds with PCA", 6)
     EMPlots(transformed, y1_train, "Seeds with PCA", 6)
     transformed = driver_pca.get_transformed_features(7)
@@ -62,7 +62,7 @@ def main():
     transformed = seeds_ica.get_transformed_features(6)
     KMeansPlots(transformed, y1_train, "Seeds with ICA", 6)
     EMPlots(transformed, y1_train, "Seeds with ICA", 6)
-    transformed = driver_ica.get_transformed_features(10)
+    transformed = driver_ica.get_transformed_features(11)
     KMeansPlots(transformed, y2_train, "Driver with ICA", 16)
     EMPlots(transformed, y2_train, "Driver with ICA", 16)
     
@@ -87,7 +87,7 @@ def main():
     EMPlots(transformed, y2_train, "Driver with LDA", 16)
 
     print("*** NN ***")
-    NNPlots(x1_train, y1_train, x1_test, y1_test, "Seeds", [2, 3, 6, 2], [3, 3])
+    NNPlots(x1_train, y1_train, x1_test, y1_test, "Seeds", [3, 6, 6, 2], [3, 3])
     NNPlots(x2_train, y2_train, x2_test, y2_test, "Driver", [7, 11, 16, 3], [5, 5])
 
 
