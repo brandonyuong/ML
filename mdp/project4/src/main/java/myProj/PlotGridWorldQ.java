@@ -22,7 +22,8 @@ import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 
 
-public class PlotTest {
+public class PlotGridWorldQ
+{
 
     public static void main(String [] args){
 

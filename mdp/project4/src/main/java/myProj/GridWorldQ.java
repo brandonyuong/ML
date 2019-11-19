@@ -1,4 +1,4 @@
-project myProj;
+package myProj;
 
 import burlap.behavior.policy.EpsilonGreedy;
 import burlap.behavior.policy.Policy;
@@ -161,7 +161,7 @@ public class GridWorldQ extends MDPSolver implements LearningAgent, QProvider {
         SimulatedEnvironment env = new SimulatedEnvironment(domain, s);
 
         //create Q-learning
-        QLTutorial agent = new GridWorldQ(domain, 0.99, new SimpleHashableStateFactory(),
+        GridWorldQ agent = new GridWorldQ(domain, 0.99, new SimpleHashableStateFactory(),
                 new ConstantValueFunction(), 0.1, 0.1);
 
         //run Q-learning and store results in a list
