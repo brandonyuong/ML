@@ -69,6 +69,7 @@ public class GridWorldAnalysis
         gwdg.setTf(tf);
         goalCondition = new TFGoalCondition(tf);
         domain = gwdg.generateDomain();
+        gwdg.setProbSucceedTransitionDynamics(0.8); //stochastic transitions with 0.8 success rate
 
         initialState = new GridWorldState(new GridAgent(0, 0), new GridLocation(10, 10, "loc0"));
         hashingFactory = new SimpleHashableStateFactory();
@@ -91,18 +92,31 @@ public class GridWorldAnalysis
     public void valueIteration(String outputPath)
     {
         Planner planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
-        Policy p = planner.planFromState(initialState);
 
-        PolicyUtils.rollout(p, initialState, domain.getModel()).write(outputPath + "vi");
+        final long startTime = System.currentTimeMillis();
+        Policy p = planner.planFromState(initialState);
+        final long endTime = System.currentTimeMillis();
+
+        Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel());
+        ea.write(outputPath + "vi");
 
         simpleValueFunctionVis((ValueFunction) planner, p);
         //manualValueFunctionVis((ValueFunction)planner, p);
+
+        double sum = 0;
+        for(Double r : ea.rewardSequence) {
+            sum += r;
+        }
+
+        System.out.println("Steps to exit: " + ea.actionSequence.size());
+        System.out.println("Run time: " + (endTime - startTime) + " milliseconds");
+        System.out.println("Reward Sum: " + sum);
     }
 
     public void policyIteration(String outputPath)
     {
-        PolicyIteration pi = new PolicyIteration(domain, 0.99,
-                new SimpleHashableStateFactory(), 0.01, 1000, 100);
+        PolicyIteration pi = new PolicyIteration(domain, 0.99, hashingFactory, 0.001,
+                1000, 100);
 
         final long startTime = System.currentTimeMillis();
         Policy p = pi.planFromState(initialState);
@@ -111,8 +125,8 @@ public class GridWorldAnalysis
         Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel());
         ea.write(outputPath + "pi");
 
-        //simpleValueFunctionVis((ValueFunction) pi, p);
-        manualValueFunctionVis((ValueFunction)pi, p);
+        simpleValueFunctionVis((ValueFunction) pi, p);
+        //manualValueFunctionVis((ValueFunction)pi, p);
 
         double sum = 0;
         for(Double r : ea.rewardSequence) {
@@ -128,8 +142,8 @@ public class GridWorldAnalysis
     {
         LearningAgent agent = new QLearning(domain, 0.99, hashingFactory, 0., 1.);
 
-        //run learning for 50 episodes
-        for (int i = 0; i < 100; i++)
+        // run for n episodes
+        for (int i = 0; i < 1000; i++)
         {
             Episode e = agent.runLearningEpisode(env);
 
@@ -219,7 +233,7 @@ public class GridWorldAnalysis
         };
 
         LearningAlgorithmExperimenter exp = new LearningAlgorithmExperimenter(
-                env, 10, 100, qLearningFactory);
+                env, 10, 1000, qLearningFactory);
         exp.setUpPlottingConfiguration(500, 250, 2, 1000,
                 TrialMode.MOST_RECENT_AND_AVERAGE,
                 PerformanceMetric.CUMULATIVE_STEPS_PER_EPISODE,
@@ -234,11 +248,11 @@ public class GridWorldAnalysis
         GridWorldAnalysis analysis = new GridWorldAnalysis();
         String outputPath = "output/";
 
-        //analysis.valueIteration(outputPath);
+        analysis.valueIteration(outputPath);
         analysis.policyIteration(outputPath);
         //analysis.qLearning(outputPath);
 
-        //analysis.experimentAndPlotter();
+        analysis.experimentAndPlotter();
 
         //analysis.visualize(outputPath);
     }
