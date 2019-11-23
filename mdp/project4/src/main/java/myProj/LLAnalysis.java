@@ -1,5 +1,17 @@
 package myProj;
 
+import burlap.behavior.functionapproximation.DifferentiableStateActionValue;
+import burlap.behavior.functionapproximation.dense.ConcatenatedObjectFeatures;
+import burlap.behavior.functionapproximation.dense.DenseCrossProductFeatures;
+import burlap.behavior.functionapproximation.dense.NormalizedVariableFeatures;
+import burlap.behavior.functionapproximation.dense.NumericVariableFeatures;
+import burlap.behavior.functionapproximation.dense.fourier.FourierBasis;
+import burlap.behavior.functionapproximation.dense.rbf.DistanceMetric;
+import burlap.behavior.functionapproximation.dense.rbf.RBFFeatures;
+import burlap.behavior.functionapproximation.dense.rbf.functions.GaussianRBF;
+import burlap.behavior.functionapproximation.dense.rbf.metrics.EuclideanDistance;
+import burlap.behavior.functionapproximation.sparse.tilecoding.TileCodingFeatures;
+import burlap.behavior.functionapproximation.sparse.tilecoding.TilingArrangement;
 import burlap.behavior.policy.GreedyQPolicy;
 import burlap.behavior.policy.Policy;
 import burlap.behavior.policy.PolicyUtils;
@@ -34,49 +46,84 @@ import burlap.mdp.singleagent.common.VisualActionObserver;
 import burlap.mdp.singleagent.environment.SimulatedEnvironment;
 import burlap.mdp.singleagent.model.FactoredModel;
 import burlap.mdp.singleagent.oo.OOSADomain;
-import burlap.mdp.singleagent.SADomain;
+import burlap.mdp.core.oo.OODomain;
 import burlap.statehashing.HashableStateFactory;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 import burlap.visualizer.Visualizer;
-import burlap.domain.singleagent.blockdude.BlockDude;
-import burlap.domain.singleagent.blockdude.BlockDudeLevelConstructor;
-import burlap.domain.singleagent.blockdude.BlockDudeTF;
-import burlap.domain.singleagent.blockdude.BlockDudeVisualizer;
 import burlap.mdp.singleagent.model.RewardFunction;
+import burlap.behavior.functionapproximation.sparse.tilecoding.TileCodingFeatures;
+import burlap.behavior.functionapproximation.sparse.tilecoding.TilingArrangement;
+import burlap.domain.singleagent.lunarlander.LLVisualizer;
+import burlap.domain.singleagent.lunarlander.LunarLanderDomain;
+import burlap.domain.singleagent.lunarlander.LunarLanderTF;
+import burlap.domain.singleagent.lunarlander.state.LLAgent;
+import burlap.domain.singleagent.lunarlander.state.LLBlock;
+import burlap.domain.singleagent.lunarlander.state.LLState;
+import burlap.behavior.singleagent.learning.tdmethods.vfa.GradientDescentSarsaLam;
+//import burlap.behavior.singleagent.learning.tdmethods.vfa.GradientDescentQLearning;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class BlockDudeAnalysis
+public class LLAnalysis
 {
-    BlockDude bd;
-    SADomain domain;
+    LunarLanderDomain ll;
+    OOSADomain domain;
     TerminalFunction tf;
+    RewardFunction rf;
     StateConditionTest goalCondition;
     State initialState;
     HashableStateFactory hashingFactory;
     SimulatedEnvironment env;
+    TileCodingFeatures tilecoding;
+    int nTilings;
 
-    public BlockDudeAnalysis(int level)
+    public LLAnalysis()
     {
-        BlockDude bd = new BlockDude(22, 22);
-        domain = bd.generateDomain();
-        tf = new BlockDudeTF();
-        bd.setTf(tf);
+        LunarLanderDomain ll = new LunarLanderDomain();
+        ll.addStandardThrustActions();
+        //ll.setXmin(0.0);
+        //ll.setYmin(0.0);
+        //ll.setXmax(10.0);
+        //ll.setYmax(10.0);
+
+        domain = ll.generateDomain();
+        tf = new LunarLanderTF(domain);
+        ll.setTf(tf);
         goalCondition = new TFGoalCondition(tf);
 
-        if (level == 3) { initialState = BlockDudeLevelConstructor.getLevel3(domain); }
-        else if (level == 2) { initialState = BlockDudeLevelConstructor.getLevel2(domain); }
-        else { initialState = BlockDudeLevelConstructor.getLevel1(domain); }
+        //rf = new GoalBasedRF(this.goalCondition, 5.0, -0.1);
 
+        LLState initialState = new LLState(new LLAgent(5, 0, 0), new LLBlock.LLPad(75, 95, 0, 10, "pad"));
         hashingFactory = new SimpleHashableStateFactory();
 
         env = new SimulatedEnvironment(domain, initialState);
+
+        /*
+        ConcatenatedObjectFeatures inputFeatures = new ConcatenatedObjectFeatures()
+                .addObjectVectorizion(LunarLanderDomain.CLASS_AGENT, new NumericVariableFeatures());
+
+        nTilings = 5;
+        double resolution = 10.;
+
+        double xWidth = (ll.getXmax() - ll.getXmin()) / resolution;
+        double yWidth = (ll.getYmax() - ll.getYmin()) / resolution;
+        double velocityWidth = 2 * ll.getVmax() / resolution;
+        double angleWidth = 2 * ll.getAngmax() / resolution;
+
+        TileCodingFeatures tilecoding = new TileCodingFeatures(inputFeatures);
+        tilecoding.addTilingsForAllDimensionsWithWidths(
+                new double []{xWidth, yWidth, velocityWidth, velocityWidth, angleWidth},
+                nTilings,
+                TilingArrangement.RANDOM_JITTER);
+        */
     }
 
     public void visualize(String outputpath)
     {
-        Visualizer v = BlockDudeVisualizer.getVisualizer(22, 22);
+        Visualizer v = LLVisualizer.getVisualizer(ll.getPhysParams());
         new EpisodeSequenceVisualizer(v, domain, outputpath);
     }
 
@@ -88,7 +135,7 @@ public class BlockDudeAnalysis
         Policy p = planner.planFromState(initialState);
         final long endTime = System.currentTimeMillis();
 
-        Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel(), 100);
+        Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel());
         ea.write(outputPath + "vi");
 
         double sum = 0;
@@ -110,7 +157,7 @@ public class BlockDudeAnalysis
         Policy p = pi.planFromState(initialState);
         final long endTime = System.currentTimeMillis();
 
-        Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel(), 100);
+        Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel());
         ea.write(outputPath + "pi");
 
         double sum = 0;
@@ -125,13 +172,25 @@ public class BlockDudeAnalysis
 
     public void qLearning(String outputPath)
     {
+        /*
+        double defaultQ = 0.5;
+        DifferentiableStateActionValue vfa = tilecoding.generateVFA(defaultQ/nTilings);
+        GradientDescentQLearning agent = new GradientDescentQLearning(domain, 0.99, vfa, 1.);
+
+        List<Episode> episodes = new ArrayList<Episode>();
+        for(int i = 0; i < 5000; i++){
+            Episode ea = agent.runLearningEpisode(env);
+            episodes.add(ea);
+            System.out.println(i + ": " + ea.maxTimeStep());
+            env.resetEnvironment();
+        }*/
+
         LearningAgent agent = new QLearning(domain, 0.99, hashingFactory, 0., 1.);
 
         // run for n episodes
         for (int i = 0; i < 1000; i++)
         {
-            Episode e = agent.runLearningEpisode(env, 1000);
-
+            Episode e = agent.runLearningEpisode(env);
             e.write(outputPath + "ql_" + i);
             System.out.println(i + ": " + e.maxTimeStep());
 
@@ -159,28 +218,27 @@ public class BlockDudeAnalysis
             }
         };
 
-        BYLearningAlgorithmExperimenter exp = new BYLearningAlgorithmExperimenter(
-                env, 5, 1000, qLearningFactory);
+        LearningAlgorithmExperimenter exp = new LearningAlgorithmExperimenter(
+                env, 10, 1000, qLearningFactory);
         exp.setUpPlottingConfiguration(500, 250, 2, 1000,
                 TrialMode.MOST_RECENT_AND_AVERAGE,
                 PerformanceMetric.CUMULATIVE_STEPS_PER_EPISODE,
                 PerformanceMetric.AVERAGE_EPISODE_REWARD);
 
         exp.startExperiment();
-        exp.writeStepAndEpisodeDataToCSV("expDataBD");
+        exp.writeStepAndEpisodeDataToCSV("expDataLL");
     }
 
     public static void main(String[] args)
     {
-        BlockDudeAnalysis analysis = new BlockDudeAnalysis(3);
-        String outputPath = "output_bd3/";
+        LLAnalysis analysis = new LLAnalysis();
+        String outputPath = "output_ll/";
 
-        analysis.valueIteration(outputPath);
-        analysis.policyIteration(outputPath);
+        //analysis.valueIteration(outputPath);
+        //analysis.policyIteration(outputPath);
         analysis.qLearning(outputPath);
 
-        analysis.experimentAndPlotter();
+        //analysis.experimentAndPlotter();
         analysis.visualize(outputPath);
-
     }
 }

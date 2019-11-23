@@ -233,7 +233,7 @@ public class GridWorldAnalysis
         };
 
         LearningAlgorithmExperimenter exp = new LearningAlgorithmExperimenter(
-                env, 10, 1000, qLearningFactory);
+                env, 10, 500, qLearningFactory);
         exp.setUpPlottingConfiguration(500, 250, 2, 1000,
                 TrialMode.MOST_RECENT_AND_AVERAGE,
                 PerformanceMetric.CUMULATIVE_STEPS_PER_EPISODE,
@@ -250,10 +250,10 @@ public class GridWorldAnalysis
 
         analysis.valueIteration(outputPath);
         analysis.policyIteration(outputPath);
-        //analysis.qLearning(outputPath);
+        analysis.qLearning(outputPath);
 
         analysis.experimentAndPlotter();
 
-        //analysis.visualize(outputPath);
+        analysis.visualize(outputPath);
     }
 }

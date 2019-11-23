@@ -17,9 +17,13 @@ import burlap.behavior.singleagent.auxiliary.valuefunctionvis.common.StateValueP
 import burlap.behavior.singleagent.learning.LearningAgent;
 import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.behavior.singleagent.learning.tdmethods.QLearning;
+import burlap.behavior.singleagent.learning.tdmethods.SarsaLam;
 import burlap.behavior.singleagent.planning.Planner;
 import burlap.behavior.singleagent.planning.deterministic.DeterministicPlanner;
 import burlap.behavior.singleagent.planning.deterministic.informed.Heuristic;
+import burlap.behavior.singleagent.planning.deterministic.informed.astar.AStar;
+import burlap.behavior.singleagent.planning.deterministic.uninformed.bfs.BFS;
+import burlap.behavior.singleagent.planning.deterministic.uninformed.dfs.DFS;
 import burlap.behavior.singleagent.planning.stochastic.valueiteration.ValueIteration;
 import burlap.behavior.singleagent.planning.stochastic.policyiteration.PolicyIteration;
 import burlap.behavior.valuefunction.QFunction;
@@ -37,45 +41,57 @@ import burlap.mdp.singleagent.oo.OOSADomain;
 import burlap.statehashing.HashableStateFactory;
 import burlap.statehashing.simple.SimpleHashableStateFactory;
 import burlap.visualizer.Visualizer;
-import burlap.domain.singleagent.blockdude.BlockDude;
-import burlap.domain.singleagent.blockdude.BlockDudeLevelConstructor;
-import burlap.domain.singleagent.blockdude.BlockDudeTF;
-import burlap.domain.singleagent.blockdude.BlockDudeVisualizer;
-import burlap.mdp.singleagent.model.RewardFunction;
+import burlap.domain.singleagent.frostbite.FrostbiteDomain;
+import burlap.domain.singleagent.frostbite.FrostbiteTF;
+import burlap.domain.singleagent.frostbite.FrostbiteRF;
+import burlap.domain.singleagent.frostbite.FrostbiteVisualizer;
+import burlap.domain.singleagent.frostbite.state.FrostbiteState;
+import burlap.domain.singleagent.frostbite.state.FrostbitePlatform;
+import burlap.domain.singleagent.frostbite.state.FrostbiteIgloo;
+import burlap.domain.singleagent.frostbite.state.FrostbiteAgent;
 
 import java.awt.*;
 import java.util.List;
 
-public class BlockDudeAnalysis2
+public class FbiteAnalysis
 {
-    BlockDude bd;
+    FrostbiteDomain fbd;
     OOSADomain domain;
     TerminalFunction tf;
-    RewardFunction rf;
     StateConditionTest goalCondition;
     State initialState;
     HashableStateFactory hashingFactory;
     SimulatedEnvironment env;
 
-    public BlockDudeAnalysis2()
+    public FbiteAnalysis()
     {
-        BlockDude bd = new BlockDude();
-
-        tf = new BlockDudeTF();
-        bd.setTf(tf);
+        fbd = new FrostbiteDomain();
+        tf = new FrostbiteTF(domain);
+        fbd.setTf(tf);
         goalCondition = new TFGoalCondition(tf);
-        domain = bd.generateDomain();
-        //rf = new GoalBasedRF(this.goalCondition, 5.0, -0.1);
+        domain = fbd.generateDomain();
 
-        initialState = BlockDudeLevelConstructor.getLevel1(domain);
+        initialState = new FrostbiteState();
         hashingFactory = new SimpleHashableStateFactory();
 
         env = new SimulatedEnvironment(domain, initialState);
+
+
+        //VisualActionObserver observer = new VisualActionObserver(domain,
+        //	GridWorldVisualizer.getVisualizer(gwdg.getMap()));
+        //observer.initGUI();
+        //env.addObservers(observer);
+    }
+
+    public void visualize(String outputpath)
+    {
+        Visualizer v = FrostbiteVisualizer.getVisualizer();
+        new EpisodeSequenceVisualizer(v, domain, outputpath);
     }
 
     public void valueIteration(String outputPath)
     {
-        Planner planner = new ValueIteration(domain, 0.99, hashingFactory, 0.01, 100);
+        Planner planner = new ValueIteration(domain, 0.99, hashingFactory, 0.001, 100);
 
         final long startTime = System.currentTimeMillis();
         Policy p = planner.planFromState(initialState);
@@ -83,6 +99,9 @@ public class BlockDudeAnalysis2
 
         Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel());
         ea.write(outputPath + "vi");
+
+        //simpleValueFunctionVis((ValueFunction) planner, p);
+        //manualValueFunctionVis((ValueFunction)planner, p);
 
         double sum = 0;
         for(Double r : ea.rewardSequence) {
@@ -105,6 +124,9 @@ public class BlockDudeAnalysis2
 
         Episode ea = PolicyUtils.rollout(p, initialState, domain.getModel());
         ea.write(outputPath + "pi");
+
+        //simpleValueFunctionVis((ValueFunction) pi, p);
+        //manualValueFunctionVis((ValueFunction)pi, p);
 
         double sum = 0;
         for(Double r : ea.rewardSequence) {
@@ -160,18 +182,20 @@ public class BlockDudeAnalysis2
                 PerformanceMetric.AVERAGE_EPISODE_REWARD);
 
         exp.startExperiment();
-        exp.writeStepAndEpisodeDataToCSV("expDataBD");
+        exp.writeStepAndEpisodeDataToCSV("expDataFB");
     }
 
     public static void main(String[] args)
     {
-        BlockDudeAnalysis2 analysis = new BlockDudeAnalysis2();
-        String outputPath = "output_bd/";
+        FbiteAnalysis analysis = new FbiteAnalysis();
+        String outputPath = "outputFB/";
 
         //analysis.valueIteration(outputPath);
         //analysis.policyIteration(outputPath);
         analysis.qLearning(outputPath);
 
         //analysis.experimentAndPlotter();
+
+        //analysis.visualize(outputPath);
     }
 }

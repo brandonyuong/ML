@@ -1,19 +1,21 @@
-package burlap.behavior.singleagent.auxiliary.performance;
+package myProj;
 
 import burlap.behavior.singleagent.Episode;
+import burlap.behavior.singleagent.auxiliary.performance.ExperimentalEnvironment;
+import burlap.behavior.singleagent.auxiliary.performance.PerformanceMetric;
+import burlap.behavior.singleagent.auxiliary.performance.PerformancePlotter;
+import burlap.behavior.singleagent.auxiliary.performance.TrialMode;
 import burlap.behavior.singleagent.learning.LearningAgent;
 import burlap.behavior.singleagent.learning.LearningAgentFactory;
 import burlap.debugtools.DPrint;
 import burlap.mdp.singleagent.environment.Environment;
 import burlap.mdp.singleagent.environment.extensions.EnvironmentServer;
-
-
 /**
- * This class is used to simplify the comparison of different learning algorithms. It takes as input a test {@link burlap.mdp.singleagent.environment.Environment}
+ * This class is used to simplify the comparison of different learning algorithms. It takes as input a test {@link burlap.oomdp.singleagent.environment.Environment}
  * in which to perform the experiments,
  * a number of trials, the length of the trials, and an array of learning agent factories used to generated agent instances and compare their performance.
- * The {@link burlap.mdp.singleagent.environment.Environment} may optionally implement the {@link burlap.behavior.singleagent.auxiliary.performance.ExperimentalEnvironment}
- * interface which will let this class to tell the {@link burlap.mdp.singleagent.environment.Environment} whenever experiments with a new agent class (defined by
+ * The {@link burlap.oomdp.singleagent.environment.Environment} may optionally implement the {@link burlap.behavior.singleagent.auxiliary.performance.ExperimentalEnvironment}
+ * interface which will let this class to tell the {@link burlap.oomdp.singleagent.environment.Environment} whenever experiments with a new agent class (defined by
  * an {@link burlap.behavior.singleagent.learning.LearningAgentFactory} is begun).
  * The length of the trials by default is assumed to be in episodes, but it may also be changed to indicate length in total number of steps using the 
  * {@link #toggleTrialLengthInterpretation(boolean)} method.
@@ -33,17 +35,18 @@ import burlap.mdp.singleagent.environment.extensions.EnvironmentServer;
  * @author James MacGlashan
  *
  */
-public class LearningAlgorithmExperimenter {
+public class BYLearningAlgorithmExperimenter
+{
 
 
 	/**
-	 * The test {@link burlap.mdp.singleagent.environment.Environment} in which experiments will be performed.
+	 * The test {@link burlap.oomdp.singleagent.environment.Environment} in which experiments will be performed.
 	 */
 	protected Environment 		testEnvironment;
 
 
 	/**
-	 * The {@link EnvironmentServer} that wraps the test {@link burlap.mdp.singleagent.environment.Environment}
+	 * The {@link burlap.oomdp.singleagent.environment.EnvironmentServer} that wraps the test {@link burlap.oomdp.singleagent.environment.Environment}
 	 * and tells a {@link burlap.behavior.singleagent.auxiliary.performance.PerformancePlotter} about the individual interactions.
 	 */
 	protected EnvironmentServer environmentSever;
@@ -116,12 +119,12 @@ public class LearningAlgorithmExperimenter {
 	 * Initializes.
 	 * The trialLength will be interpreted as the number of episodes, but it can be reinterpreted as a total number of steps per trial using the
 	 * {@link #toggleTrialLengthInterpretation(boolean)}.
-	 * @param testEnvironment the test {@link burlap.mdp.singleagent.environment.Environment} in which experiments will be performed.
+	 * @param testEnvironment the test {@link burlap.oomdp.singleagent.environment.Environment} in which experiments will be performed.
 	 * @param nTrials the number of trials
 	 * @param trialLength the length of the trials (by default in episodes, but can be intereted as maximum step length)
 	 * @param agentFactories factories to generate the agents to be tested.
 	 */
-	public LearningAlgorithmExperimenter(Environment testEnvironment, int nTrials, int trialLength, LearningAgentFactory...agentFactories){
+	public BYLearningAlgorithmExperimenter(Environment testEnvironment, int nTrials, int trialLength, LearningAgentFactory...agentFactories){
 		
 		if(agentFactories.length == 0){
 			throw new RuntimeException("Zero agent factories provided. At least one must be given for an experiment");
@@ -132,9 +135,9 @@ public class LearningAlgorithmExperimenter {
 		this.trialLength = trialLength;
 		this.agentFactories = agentFactories;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Setsup the plotting confiruation.
 	 * @param chartWidth the width of each chart/plot
@@ -145,11 +148,11 @@ public class LearningAlgorithmExperimenter {
 	 * @param metrics the metrics that should be plotted. The metrics will appear in the window in the order that they are specified (columns first)
 	 */
 	public void setUpPlottingConfiguration(int chartWidth, int chartHeight, int columns, int maxWindowHeight, TrialMode trialMode, PerformanceMetric...metrics){
-		
+
 		if(trialMode.averagesEnabled() && this.nTrials == 1){
 			trialMode = TrialMode.MOST_RECENT_TRIAL_ONLY;
 		}
-		
+
 		this.displayPlots = true;
 		this.plotter = new PerformancePlotter(this.agentFactories[0].getAgentName(), chartWidth, chartHeight, columns, maxWindowHeight, trialMode, metrics);
 		this.plotter.setRefreshDelay(this.plotRefresh);
@@ -323,7 +326,7 @@ public class LearningAlgorithmExperimenter {
 		this.plotter.startNewTrial();
 		
 		for(int i = 0; i < this.trialLength; i++){
-			agent.runLearningEpisode(this.environmentSever);
+			agent.runLearningEpisode(this.environmentSever, this.trialLength);
 			this.plotter.endEpisode();
 			this.environmentSever.resetEnvironment();
 		}
