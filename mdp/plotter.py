@@ -28,4 +28,18 @@ def plot_q_val(title, q_val_file, optimal_steps):
 if __name__ == "__main__":
     #plot_q_val("GW Q Learning", "GW_q.txt", 20)
     #plot_q_val("BD Lv1 Q Learning", "BD_1_q.txt", 19)
-    plot_q_val("BD Lv3 Q Learning", "BD_3_q.txt", 94)
+    #plot_q_val("BD Lv3 Q Learning", "BD_3_q.txt", 94)
+
+    #plot_q_val("GW Q Learning LR=0.1", "GW_lr0.1_q.txt", 20)
+    #plot_q_val("GW Q Learning LR=0.5", "GW_lr0.5_q.txt", 20)
+    #plot_q_val("BD Lv1 Q Learning LR=0.5", "BD_1_lr0.5_q.txt", 19)
+    #plot_q_val("BD Lv1 Q Learning LR=0.1", "BD_1_lr0.1_q.txt", 19)
+    #plot_q_val("BD Lv3 Q Learning LR=0.5", "BD_3_lr0.5_q.txt", 94)
+    #plot_q_val("BD Lv3 Q Learning LR=0.1", "BD_3_lr0.1_q.txt", 94)
+
+    #plot_q_val("GW Q Learning Qinit=10.0", "GW_lr1.0_qi10.0_q.txt", 20)
+    #plot_q_val("GW Q Learning Qinit=100.0", "GW_lr1.0_qi100.0_q.txt", 20)
+    #plot_q_val("BD Lv1 Q Qinit=10.0", "BD_1_lr1.0_qi10.0_q.txt", 19)
+    #plot_q_val("BD Lv1 Q Qinit=100.0", "BD_1_lr1.0_qi100.0_q.txt", 19)
+    #plot_q_val("BD Lv3 Q Qinit=10.0", "BD_3_lr1.0_qi10.0_q.txt", 94)
+    #plot_q_val("BD Lv3 Q Qinit=100.0", "BD_3_lr1.0_qi100.0_q.txt", 94)
